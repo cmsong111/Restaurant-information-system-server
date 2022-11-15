@@ -29,7 +29,7 @@ public class StoreController {
     }
 
     @PostMapping("/read")
-    public StoreDTO readStore(@RequestBody StoreDTO  storeDTO){
+    public StoreDTO readStore(@RequestBody StoreDTO storeDTO) {
         return null;
     }
 
