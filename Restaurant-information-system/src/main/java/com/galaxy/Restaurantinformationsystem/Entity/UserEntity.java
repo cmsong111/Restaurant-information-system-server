@@ -20,17 +20,17 @@ import javax.persistence.*;
         initialValue = 1)
 @Table(name = "user")
 public class UserEntity {
-
+    @Id
     @Column(name = "upk", unique = true)   //속성명 수정
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "USER_SEQ_GENERATOR")
     Long UPK;
-    @Id
+
     @Column(name = "id", unique = true)
     String ID;
     String password;
     String name;
     int age;
-    @Column(name = "id_amdin")
+    @Column(name = "id_amdin", columnDefinition = "VARCHAR(255) default 'false'")
     boolean isAdmin;
 
 

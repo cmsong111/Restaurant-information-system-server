@@ -5,10 +5,7 @@ import com.galaxy.Restaurantinformationsystem.DTO.UserDTO;
 import com.galaxy.Restaurantinformationsystem.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @Controller
@@ -39,21 +36,21 @@ public class UserController {
         if (user.getID() == null && user.getPassword() == null) {
             return null;
         }
-        return userService.getUser(user);
-
+        return userService.getUser(user.getID(), user.getPassword());
     }
 
-    //회원 삭제
+    //회원 업데이트
     @PostMapping("/update")
     public UserDTO userUpdate(@RequestBody UserDTO user) {
         // TODO : User 업데이트 메소드 작성
-        System.out.println(user.getUPK());
-        userService.deleteUser(user);
+
+        userService.updateUser(user);
 
         return user;
     }
 
-    @PostMapping("/delete")
+    //삭제
+    @DeleteMapping("/delete")
     public UserDTO userDelete(@RequestBody UserDTO user){
         // TODO : 유저 제거 메소드 작성
         return userService.deleteUser(user);

@@ -41,10 +41,10 @@ public class StoreEntity {
     @Column(name = "location_address1")
     String locationAddress1;
 
-    @Column(name = "web")
-    List<String> Web;
-
-    List<String> tag;
+//    @Column(name = "web")
+//    List<String> Web;
+//
+//    List<String> tag;
 
     @Column(name = "start_time")
     LocalDateTime startTime;
@@ -52,11 +52,11 @@ public class StoreEntity {
     @Column(name = "end_time")
     LocalDateTime endTime;
 
-    @OneToOne
-    @JoinColumn(name = "is_admin")
-    User isAdmin;
-
-    @OneToMany
-    String menu;
+//    @OneToOne
+//    @JoinColumn(name = "is_admin")
+//    User isAdmin;
+//
+//    @OneToMany
+//    String menu;
 
 }
