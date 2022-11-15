@@ -1,12 +1,16 @@
 package com.galaxy.Restaurantinformationsystem.Entity;
 
+import com.galaxy.Restaurantinformationsystem.DTO.StoreDTO;
 import com.galaxy.Restaurantinformationsystem.DTO.UserDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -22,19 +26,32 @@ import javax.persistence.*;
 public class UserEntity {
     @Id
     @Column(name = "upk", unique = true)   //속성명 수정
-    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "USER_SEQ_GENERATOR")
-    Long UPK;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)//, generator = "USER_SEQ_GENERATOR")
+    private  Long UPK;
 
     @Column(name = "id", unique = true)
-    String ID;
-    String password;
-    String name;
-    int age;
+    private  String ID;
+    private    String password;
+    private  String name;
+    private  int age;
     @Column(name = "id_amdin", columnDefinition = "VARCHAR(255) default 'false'")
-    boolean isAdmin;
+    private  boolean isAdmin;
+
+    @OneToMany
+    @JoinColumn(name = "upk")
+    @Nullable
+    private List<StoreEntity> storeEntity;
 
 
     public UserDTO toDTO() {
+
+        List<StoreDTO> storeDTOArrayList = new ArrayList<>();
+        if (storeEntity != null) {
+            for (StoreEntity store : storeEntity) {
+                storeDTOArrayList.add(store.toDTO());
+            }
+        }
+
         return UserDTO.builder()
                 .UPK(UPK)
                 .ID(ID)
@@ -42,6 +59,7 @@ public class UserEntity {
                 .name(name)
                 .age(age)
                 .isAdmin(isAdmin)
+                .storeDTO(storeDTOArrayList)
                 .build();
     }
 }

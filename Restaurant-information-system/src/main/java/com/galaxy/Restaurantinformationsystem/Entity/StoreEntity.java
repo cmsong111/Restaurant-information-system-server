@@ -1,62 +1,68 @@
 package com.galaxy.Restaurantinformationsystem.Entity;
 
-import jdk.jfr.Category;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import org.apache.catalina.User;
-import org.springframework.boot.autoconfigure.security.SecurityProperties;
+import com.galaxy.Restaurantinformationsystem.DTO.StoreDTO;
+import lombok.*;
+import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
-import javax.print.DocFlavor;
-import javax.xml.catalog.Catalog;
-import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @SequenceGenerator(
-        name="STORE_SEQ_GENERATOR",
+        name = "STORE_SEQ_GENERATOR",
         sequenceName = "STORE_SEQ")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-
+@Table(name = "store")
 public class StoreEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "STORE_SEQ_GENERATOR")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)//, generator = "STORE_SEQ_GENERATOR")
     @Column(name = "spk")
-    Long SPK;
-
-    String name;
-
-    String call;
-
-    @Column(name = "location_region")
-    String locationRegion;
-
-    @Column(name = "location_city")
-    String locationCity;
-
-    @Column(name = "location_address1")
-    String locationAddress1;
-
-//    @Column(name = "web")
-//    List<String> Web;
-//
-//    List<String> tag;
-
+    private Long SPK;
+    private String name;
+    @Column(name = "call_number")
+    private String call;
+    private String location1;
+    private String location2;
+    private String location3;
     @Column(name = "start_time")
-    LocalDateTime startTime;
-
+    private LocalTime startTime;
     @Column(name = "end_time")
-    LocalDateTime endTime;
+    private LocalTime endTime;
 
-//    @OneToOne
-//    @JoinColumn(name = "is_admin")
-//    User isAdmin;
-//
+    private boolean kids;
+    private boolean price;
+    private boolean tasty;
+    @Column(name = "role_model")
+    private boolean rolemodel;
+
+    @ManyToOne
+    @JoinColumn(name = "upk",insertable = false, updatable = false)
+    private UserEntity adminUser;
 //    @OneToMany
-//    String menu;
+//    private String menu;
+
+    public StoreDTO toDTO() {
+        return StoreDTO.builder()
+                .SPK(SPK)
+                .name(name)
+                .call(call)
+                .location1(location1)
+                .location2(location2)
+                .location3(location3)
+                .startTime(startTime)
+                .endTime(endTime)
+                .kids(kids)
+                .price(price)
+                .tasty(tasty)
+                .rolemodel(rolemodel)
+                .adminUser(adminUser.toDTO())
+                .build();
+    }
 
 }

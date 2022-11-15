@@ -7,8 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
+
 @RestController
-@Controller
 @RequestMapping("/user")
 
 public class UserController {
@@ -22,7 +25,8 @@ public class UserController {
 
     // 회원가입
     @PostMapping("/create")
-    public UserDTO userCreate(@RequestBody UserDTO userDTO) {
+    public UserDTO userCreate(@RequestBody UserDTO userDTO) throws NoSuchAlgorithmException {
+
         // TODO : User 비밀번호 암호와
         // TODO : User 아이디 중복
 
@@ -31,28 +35,26 @@ public class UserController {
 
     // 회원 정보 읽기
     @PostMapping("/read")
-    public UserDTO userRead(@RequestBody UserDTO user) {
+    public UserDTO userRead(@RequestBody UserDTO userDTO) throws NoSuchAlgorithmException {
+        userDTO.setPassword(sha256(userDTO.getPassword()));
         // TODO : User 읽기 메소드 작성
-        if (user.getID() == null && user.getPassword() == null) {
+        if (userDTO.getID() == null && userDTO.getPassword() == null) {
             return null;
         }
-        return userService.getUser(user.getID(), user.getPassword());
+        return userService.getUser(userDTO.getID(), userDTO.getPassword());
     }
 
     //회원 업데이트
     @PostMapping("/update")
-    public UserDTO userUpdate(@RequestBody UserDTO user) {
-        // TODO : User 업데이트 메소드 작성
+    public UserDTO userUpdate(@RequestBody UserDTO userDTO) throws NoSuchAlgorithmException {
+        userDTO = userService.updateUser(userDTO);
 
-        userService.updateUser(user);
-
-        return user;
+        return userDTO;
     }
 
     //삭제
     @DeleteMapping("/delete")
-    public UserDTO userDelete(@RequestBody UserDTO user){
-        // TODO : 유저 제거 메소드 작성
+    public UserDTO userDelete(@RequestBody UserDTO user) {
         return userService.deleteUser(user);
     }
 
@@ -62,5 +64,16 @@ public class UserController {
         return userService.checkDuplicateID(userDTO.getID());
     }
 
+    private String sha256(String password) throws NoSuchAlgorithmException {
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            md.update(password.getBytes());
+            byte[] bytes = md.digest();
+            return bytes.toString();
 
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
