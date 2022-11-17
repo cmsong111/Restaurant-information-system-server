@@ -1,13 +1,13 @@
 package com.galaxy.Restaurantinformationsystem.Entity;
 
 import com.galaxy.Restaurantinformationsystem.DTO.StoreDTO;
-import lombok.*;
-import org.springframework.lang.Nullable;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
@@ -34,15 +34,19 @@ public class StoreEntity {
     private LocalTime startTime;
     @Column(name = "end_time")
     private LocalTime endTime;
+    @Column(name = "location_x")
+    private long locationX;
+    @Column(name = "location_y")
+    private long locationY;
 
     private boolean kids;
     private boolean price;
     private boolean tasty;
     @Column(name = "role_model")
-    private boolean rolemodel;
+    private boolean roleModel;
 
-    @ManyToOne
-    @JoinColumn(name = "upk",insertable = false, updatable = false)
+    @OneToOne
+    @JoinColumn(name = "upk", insertable = false, updatable = false)
     private UserEntity adminUser;
 //    @OneToMany
 //    private String menu;
@@ -60,7 +64,9 @@ public class StoreEntity {
                 .kids(kids)
                 .price(price)
                 .tasty(tasty)
-                .rolemodel(rolemodel)
+                .roleModel(roleModel)
+                .locationX(locationX)
+                .locationY(locationY)
                 .adminUser(adminUser.toDTO())
                 .build();
     }

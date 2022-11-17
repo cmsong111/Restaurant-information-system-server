@@ -5,10 +5,7 @@ import com.galaxy.Restaurantinformationsystem.Entity.StoreEntity;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.List;
-import java.util.regex.Pattern;
 
 @Data
 @AllArgsConstructor
@@ -29,7 +26,9 @@ public class StoreDTO {
     private boolean price;
     private boolean tasty;
 
-    private boolean rolemodel;
+    private boolean roleModel;
+    private long locationX;
+    private long locationY;
 
     private UserDTO adminUser;
 
@@ -46,7 +45,9 @@ public class StoreDTO {
                 .kids(kids)
                 .price(price)
                 .tasty(tasty)
-                .rolemodel(rolemodel)
+                .roleModel(roleModel)
+                .locationX(locationX)
+                .locationY(locationY)
                 .adminUser(adminUser.toEntity())
                 .build();
 

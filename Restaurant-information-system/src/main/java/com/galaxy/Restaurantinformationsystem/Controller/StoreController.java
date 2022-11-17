@@ -3,11 +3,9 @@ package com.galaxy.Restaurantinformationsystem.Controller;
 import com.galaxy.Restaurantinformationsystem.DTO.StoreDTO;
 import com.galaxy.Restaurantinformationsystem.Service.StoreService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@Controller
 @RequestMapping("/store")
 public class StoreController {
 
