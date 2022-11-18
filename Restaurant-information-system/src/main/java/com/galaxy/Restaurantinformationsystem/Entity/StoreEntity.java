@@ -47,12 +47,9 @@ public class StoreEntity {
     @Column(name = "role_model")
     private boolean roleModel;
 
-    @OneToOne
-    @Nullable
+    @OneToOne(mappedBy = "storeEntity")
     @JoinColumn(name = "upk", insertable = false, updatable = false)
     private UserEntity adminUser;
-//    @OneToMany
-//    private String menu;
 
     public StoreDTO toDTO() {
         return StoreDTO.builder()

@@ -1,11 +1,9 @@
 package com.galaxy.Restaurantinformationsystem.Entity;
 
+import com.galaxy.Restaurantinformationsystem.DTO.MenuDTO;
 import com.galaxy.Restaurantinformationsystem.DTO.StoreDTO;
 import com.galaxy.Restaurantinformationsystem.DTO.UserDTO;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
@@ -29,6 +27,7 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)//, generator = "USER_SEQ_GENERATOR")
     private  Long UPK;
 
+    @NonNull
     @Column(name = "id", unique = true)
     private  String ID;
     private    String password;
@@ -37,7 +36,7 @@ public class UserEntity {
     @Column(name = "id_amdin", columnDefinition = "VARCHAR(255) default 'false'")
     private  boolean isAdmin;
 
-    @OneToMany
+    @OneToOne
     @JoinColumn(name = "upk")
     @Nullable
     private List<StoreEntity> storeEntity;
