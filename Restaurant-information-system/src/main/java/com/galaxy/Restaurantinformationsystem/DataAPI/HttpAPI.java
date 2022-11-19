@@ -29,7 +29,7 @@ public class HttpAPI {
         // 파라미터
         String baseURL = "https://api.odcloud.kr/api/15102055/v1/uddi:122cc22d-cde3-41d0-83c8-db83298b994f";
 
-        
+
         // URL 생성
         HttpGet httpget = new HttpGet(baseURL);
         URI uri = new URIBuilder(httpget.getURI())
@@ -45,11 +45,11 @@ public class HttpAPI {
         // body 결과값 얻기
         HttpEntity entity = response.getEntity();
         String result = EntityUtils.toString(entity);
-        
+
         // 로그 남기기
         logger.info(httpget.getURI().toString());
         logger.info(StoreKidsServiceKey);
-        
+
         return result;
     }
 }

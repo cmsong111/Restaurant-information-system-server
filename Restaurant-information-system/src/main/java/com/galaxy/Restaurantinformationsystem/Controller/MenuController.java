@@ -3,11 +3,13 @@ package com.galaxy.Restaurantinformationsystem.Controller;
 import com.galaxy.Restaurantinformationsystem.DTO.MenuDTO;
 import com.galaxy.Restaurantinformationsystem.Service.MenuService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 public class MenuController {
 
-    MenuService MenuService;
+    com.galaxy.Restaurantinformationsystem.Service.MenuService MenuService;
 
     @Autowired
     public MenuController(MenuService MenuService) {

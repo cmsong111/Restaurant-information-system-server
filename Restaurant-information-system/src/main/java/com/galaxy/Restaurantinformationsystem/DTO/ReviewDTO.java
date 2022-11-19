@@ -1,7 +1,5 @@
 package com.galaxy.Restaurantinformationsystem.DTO;
 
-import com.galaxy.Restaurantinformationsystem.Entity.ReviewEntity;
-import com.galaxy.Restaurantinformationsystem.Entity.UserEntity;
 import lombok.*;
 
 @Builder
@@ -13,21 +11,11 @@ import lombok.*;
 public class ReviewDTO {
 
     private Long RPK;
-
     private String title;
     private String content;
     private String image;
-    private MenuDTO menuDTO;
-    private UserDTO userDTO;
+    private Long menuDTO;
+    private Long userDTO;
 
-    public ReviewEntity toEntity(){
-        return ReviewEntity.builder()
-                .RPK(RPK)
-                .title(title)
-                .content(content)
-                .image(image)
-                .menuEntity(menuDTO.toEntity())
-                .userEntity(userDTO.toEntity())
-                .build();
-    }
+
 }
