@@ -63,7 +63,12 @@ public class StoreServiceImpl implements StoreService {
         // 객체 변환
         ArrayList<StoreKidDataDTO> data = gson.fromJson(response, StoreKidsPageDTO.class).getData();
 
-
+        UserDTO userDTO = UserDTO.builder()
+                .password("admin")
+                .UPK(1)
+                .ID("admin")
+                .name("admin")
+                .build();
 
         for (StoreKidDataDTO i : data) {
             String[] location = i.get도로명주소().split(" ");
@@ -73,13 +78,14 @@ public class StoreServiceImpl implements StoreService {
                     .kids(true)
                     .name(i.get가맹점명칭())
                     .call(i.get전화번호())
-                    .adminUser(UserDTO.builder().build())
+                    .adminUser(userDTO)
                     .locationY(Double.valueOf(i.get경도()))
                     .locationX(Double.valueOf(i.get위도()))
                     .location1(location[0])
                     .location2(location[1])
                     .location3(location[2])
                     .category(i.get업종())
+                    .reviews(null)
                     .build();
 
             storeRepository.save(object.toEntity());
