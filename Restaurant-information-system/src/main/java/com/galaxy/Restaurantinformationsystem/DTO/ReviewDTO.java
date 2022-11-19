@@ -1,6 +1,7 @@
 package com.galaxy.Restaurantinformationsystem.DTO;
 
 import com.galaxy.Restaurantinformationsystem.Entity.ReviewEntity;
+import com.galaxy.Restaurantinformationsystem.Entity.UserEntity;
 import lombok.*;
 
 @Builder
@@ -15,7 +16,9 @@ public class ReviewDTO {
 
     private String title;
     private String content;
-    private Boolean image;
+    private String image;
+    private MenuDTO menuDTO;
+    private UserDTO userDTO;
 
     public ReviewEntity toEntity(){
         return ReviewEntity.builder()
@@ -23,6 +26,8 @@ public class ReviewDTO {
                 .title(title)
                 .content(content)
                 .image(image)
+                .menuEntity(menuDTO.toEntity())
+                .userEntity(userDTO.toEntity())
                 .build();
     }
 }

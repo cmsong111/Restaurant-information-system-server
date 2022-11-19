@@ -11,8 +11,6 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@SequenceGenerator(name = "REVIEW_SEQ_GENERATOR",
-        sequenceName = "REVIEW_SEQ")
 @Table(name = "review")
 public class ReviewEntity {
 
@@ -23,7 +21,16 @@ public class ReviewEntity {
 
     private String title;
     private String content;
-    private Boolean image;
+    private String image;
+
+    @JoinColumn(name = "menu")
+    @ManyToOne
+    private MenuEntity menuEntity;
+
+    @JoinColumn(name = "upk")
+    @ManyToOne
+    private UserEntity userEntity;
+
 
     public ReviewDTO toDTO(){
         return ReviewDTO.builder()
@@ -31,6 +38,8 @@ public class ReviewEntity {
                 .title(title)
                 .content(content)
                 .image(image)
+                .userDTO(userEntity.toDTO())
+                .menuDTO(menuEntity.toDTO())
                 .build();
     }
 }

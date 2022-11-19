@@ -2,6 +2,7 @@ package com.galaxy.Restaurantinformationsystem.Entity;
 
 import com.galaxy.Restaurantinformationsystem.DTO.MenuDTO;
 import lombok.*;
+import org.apache.catalina.Store;
 
 import javax.persistence.*;
 
@@ -10,22 +11,21 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@SequenceGenerator(name = "MENU_SEQ_GENERATOR",
-        sequenceName = "MENU_SEQ")
 @Table(name = "menu")
 public class MenuEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "mpk")
     private Long MPK;
 
     private String name;
-    private Boolean price;
-    private Boolean image;
+    private int price;
+    private String image;
 
-    @OneToMany
-    @JoinColumn(name = "spk", insertable = false, updatable = false)
+    @ManyToOne
+    @JoinColumn(name = "spk")
+    private StoreEntity store;
 
 
     public MenuDTO toDTO() {

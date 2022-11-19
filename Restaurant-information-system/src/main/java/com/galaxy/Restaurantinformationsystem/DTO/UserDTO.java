@@ -1,6 +1,7 @@
 package com.galaxy.Restaurantinformationsystem.DTO;
 
 
+import com.galaxy.Restaurantinformationsystem.Entity.ReviewEntity;
 import com.galaxy.Restaurantinformationsystem.Entity.StoreEntity;
 import com.galaxy.Restaurantinformationsystem.Entity.UserEntity;
 import lombok.*;
@@ -23,6 +24,7 @@ public class UserDTO {
 
 
     List<StoreDTO> storeDTO;
+    List<ReviewDTO> reviewDTO;
 
     public UserEntity toEntity() {
 
@@ -30,6 +32,12 @@ public class UserDTO {
         if (storeDTO != null) {
             for (StoreDTO store : storeDTO) {
                 storeEntityList.add(store.toEntity());
+            }
+        }
+        List<ReviewEntity> ReviewEntities = new ArrayList<>();
+        if (reviewDTO != null){
+            for (ReviewDTO reviewDTO : reviewDTO) {
+                ReviewEntities.add(reviewDTO.toEntity());
             }
         }
 
@@ -41,6 +49,7 @@ public class UserDTO {
                 .age(age)
                 .isAdmin(isAdmin)
                 .storeEntity(storeEntityList)
+                .reviewEntity(ReviewEntities)
                 .build();
     }
 }

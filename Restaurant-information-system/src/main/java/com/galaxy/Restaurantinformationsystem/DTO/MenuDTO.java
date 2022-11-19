@@ -13,8 +13,8 @@ public class MenuDTO {
 
     private Long MPK;
     private String name;
-    private Boolean price;
-    private Boolean image;
+    private int price;
+    private String image;
 
     public MenuEntity toEntity(){
         return MenuEntity.builder()

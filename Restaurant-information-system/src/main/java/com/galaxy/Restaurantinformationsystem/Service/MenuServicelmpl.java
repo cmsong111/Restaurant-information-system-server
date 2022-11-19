@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class MenuServicelmpl {
+public class MenuServicelmpl implements MenuService {
 
     MenuRepository MenuRepository;
 
@@ -18,7 +18,7 @@ public class MenuServicelmpl {
     }
 
     @Override
-    public MenuDTO createMenuDTO(@NotNull MenuDTO MenuDTO) {
+    public MenuDTO createMenuDTO(MenuDTO MenuDTO) {
         MenuEntity MenuEntity = MenuDTO.toEntity();
         return MenuRepository.save(MenuEntity).toDTO();
     }
