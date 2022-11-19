@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import java.time.LocalTime;
@@ -30,14 +31,15 @@ public class StoreEntity {
     private String location1;
     private String location2;
     private String location3;
+    private String category;
     @Column(name = "start_time")
     private LocalTime startTime;
     @Column(name = "end_time")
     private LocalTime endTime;
     @Column(name = "location_x")
-    private long locationX;
+    private double locationX;
     @Column(name = "location_y")
-    private long locationY;
+    private double locationY;
 
     private boolean kids;
     private boolean price;
@@ -46,6 +48,7 @@ public class StoreEntity {
     private boolean roleModel;
 
     @OneToOne
+    @Nullable
     @JoinColumn(name = "upk", insertable = false, updatable = false)
     private UserEntity adminUser;
 //    @OneToMany
@@ -63,6 +66,7 @@ public class StoreEntity {
                 .endTime(endTime)
                 .kids(kids)
                 .price(price)
+                .category(category)
                 .tasty(tasty)
                 .roleModel(roleModel)
                 .locationX(locationX)

@@ -27,8 +27,9 @@ public class StoreDTO {
     private boolean tasty;
 
     private boolean roleModel;
-    private long locationX;
-    private long locationY;
+    private double locationX;
+    private double locationY;
+    private String category;
 
     private UserDTO adminUser;
 
@@ -44,6 +45,7 @@ public class StoreDTO {
                 .endTime(endTime)
                 .kids(kids)
                 .price(price)
+                .category(category)
                 .tasty(tasty)
                 .roleModel(roleModel)
                 .locationX(locationX)
