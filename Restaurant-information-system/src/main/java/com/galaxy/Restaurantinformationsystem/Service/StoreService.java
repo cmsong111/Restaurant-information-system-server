@@ -98,7 +98,9 @@ public class StoreService {
         storeEntity.setPrice(storeDTO.isPrice());
         storeEntity.setCall(storeDTO.getCall());
         storeEntity.setRoleModel(storeDTO.isRoleModel());
-        storeEntity.setCategory(storeDTO.getCategory());
+        if (storeDTO.getCategory() != null) {
+            storeEntity.setCategory(storeDTO.getCategory());
+        }
         storeEntity.setLocation1(storeDTO.getLocation1());
         storeEntity.setLocation2(storeDTO.getLocation2());
         storeEntity.setLocation3(storeDTO.getLocation3());
@@ -119,6 +121,29 @@ public class StoreService {
         StoreEntity storeEntity = storeRepository.findById(storeDTO.getSPK()).get();
         storeRepository.delete(storeEntity);
     }
+
+    public ArrayList<StoreDTO> serchByNameAndLocation(StoreDTO storeDTO) {
+        ArrayList<StoreDTO> results = new ArrayList<>();
+        List<StoreEntity> queried = storeRepository.findAllByNameAndLocation2(storeDTO.getName(), storeDTO.getLocation2());
+        if (queried != null) {
+            for (StoreEntity object : queried) {
+                results.add(toDTO(object));
+            }
+        }
+        return results;
+    }
+
+    public ArrayList<StoreDTO> serchByCategoryAndLocation2(StoreDTO storeDTO) {
+        ArrayList<StoreDTO> results = new ArrayList<>();
+        List<StoreEntity> queried = storeRepository.findAllByCategoryAndLocation2(storeDTO.getCategory(), storeDTO.getLocation2());
+        if (queried != null) {
+            for (StoreEntity object : queried) {
+                results.add(toDTO(object));
+            }
+        }
+        return results;
+    }
+
 
     public boolean storeDuplicationCheck(StoreDTO storeDTO) {
         List<StoreEntity> result = storeRepository.findAllByNameAndLocation2(storeDTO.getName(), storeDTO.getLocation2());
@@ -160,18 +185,11 @@ public class StoreService {
         }
     }
 
-    public void updateTasty(int perPage,int page) throws IOException, URISyntaxException{
+    public void updateTasty(int perPage, int page) throws IOException, URISyntaxException {
         String result = httpAPI.getTastyStore(perPage, page);
-        System.out.println(result);
-
-        StoreTastyPage storeTastyPage = gson.fromJson(result, StoreTastyPage.class);
-        StoreTastyResult storeTastyResult =  gson.fromJson(result, StoreTastyPage.class).getFoodKr;
         ArrayList<StoreTastyItem> data = gson.fromJson(result, StoreTastyPage.class).getFoodKr.item;
 
-        System.out.println(storeTastyPage.toString());
-        System.out.println(storeTastyResult.toString());
-
-        for(StoreTastyItem item : data){
+        for (StoreTastyItem item : data) {
             System.out.println(item.toString());
         }
     }

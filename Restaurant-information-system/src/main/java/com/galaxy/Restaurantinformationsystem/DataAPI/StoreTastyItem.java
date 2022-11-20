@@ -25,3 +25,4 @@ public class StoreTastyItem {
     public String ITEMCNTNTS;
 }
 
+

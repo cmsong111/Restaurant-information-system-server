@@ -40,23 +40,29 @@ public class StoreController {
 
     @PostMapping("/update")
     public StoreDTO updateStore(@RequestBody StoreDTO storeDTO) {
-        return storeService.updateStoreDTO(storeDTO);
+        if (storeDTO.getUPK() == null) {
+            return storeService.updateStoreDTO(storeDTO);
+        } else {
+            return null;
+        }
     }
 
-    @PostMapping("/serch-location")
+    @GetMapping("/serch-location")
     public ArrayList<StoreDTO> serchBylocation(@RequestBody StoreDTO storeDTO) {
         ArrayList<StoreDTO> results = storeService.searchByLocationArray(storeDTO);
         return results;
     }
 
-    @PostMapping("/serch-name")
-    public StoreDTO serchByName(@RequestBody StoreDTO storeDTO) {
-        return null;
+    @GetMapping("/serch-name")
+    public ArrayList<StoreDTO> serchByName(@RequestBody StoreDTO storeDTO) {
+        ArrayList<StoreDTO> results = storeService.serchByNameAndLocation(storeDTO);
+        return results;
     }
 
-    @PostMapping("/serch-category")
-    public StoreDTO serchByCategory(@RequestBody StoreDTO storeDTO) {
-        return null;
+    @GetMapping("/serch-category")
+    public ArrayList<StoreDTO> serchByCategory(@RequestBody StoreDTO storeDTO) {
+        ArrayList<StoreDTO> results = storeService.serchByCategoryAndLocation2(storeDTO);
+        return results;
     }
 
     @GetMapping("/serch-id")
@@ -64,10 +70,20 @@ public class StoreController {
         return storeService.serchById(id);
     }
 
+    @PostMapping("update")
+    public StoreDTO storeUpdate(@RequestBody StoreDTO storeDTO) {
+        return storeService.updateStoreDTO(storeDTO);
+    }
 
+    @ResponseBody
     @DeleteMapping("/delete")
-    public void deleteStore(@RequestBody StoreDTO storeDTO) {
-        storeService.deleteStore(storeDTO);
+    public String deleteStore(@RequestBody StoreDTO storeDTO) {
+        if (storeDTO.getUPK() == null) {
+            return "failed";
+        } else {
+            storeService.deleteStore(storeDTO);
+            return "requested";
+        }
     }
 
     @ResponseBody
@@ -97,10 +113,10 @@ public class StoreController {
 
     @ResponseBody
     @PostMapping("/update-tasty")
-    public String updateTasty() throws IOException, URISyntaxException{
+    public String updateTasty() throws IOException, URISyntaxException {
         int perPage = 300;
         int page = 1;
-        storeService.updateTasty(perPage,page);
+        storeService.updateTasty(perPage, page);
         return "update requested!";
     }
 }
