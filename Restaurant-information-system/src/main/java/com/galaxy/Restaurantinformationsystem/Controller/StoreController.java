@@ -94,6 +94,15 @@ public class StoreController {
         }
         return "Update Requested";
     }
+
+    @ResponseBody
+    @PostMapping("/update-tasty")
+    public String updateTasty() throws IOException, URISyntaxException{
+        int perPage = 300;
+        int page = 1;
+        storeService.updateTasty(perPage,page);
+        return "update requested!";
+    }
 }
 
 @Builder

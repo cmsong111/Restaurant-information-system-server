@@ -1,9 +1,7 @@
 package com.galaxy.Restaurantinformationsystem.Service;
 
 import com.galaxy.Restaurantinformationsystem.DTO.StoreDTO;
-import com.galaxy.Restaurantinformationsystem.DataAPI.HttpAPI;
-import com.galaxy.Restaurantinformationsystem.DataAPI.StoreKidDataDTO;
-import com.galaxy.Restaurantinformationsystem.DataAPI.StoreKidsPageDTO;
+import com.galaxy.Restaurantinformationsystem.DataAPI.*;
 import com.galaxy.Restaurantinformationsystem.Entity.MenuEntity;
 import com.galaxy.Restaurantinformationsystem.Entity.ReviewEntity;
 import com.galaxy.Restaurantinformationsystem.Entity.StoreEntity;
@@ -67,7 +65,7 @@ public class StoreService {
     public ArrayList<StoreDTO> searchByLocationArray(StoreDTO storeDTO) {
         ArrayList<StoreDTO> results = new ArrayList<>();
 
-        List<StoreEntity> storeEntityArrayList = storeRepository.searchByLocation(storeDTO.getLocation1(), storeDTO.getLocation2());
+        List<StoreEntity> storeEntityArrayList = storeRepository.findByLocation1AndLocation2(storeDTO.getLocation1(), storeDTO.getLocation2());
 
         //if (storeEntityArrayList != null) {
         for (StoreEntity storeEntity : storeEntityArrayList) {
@@ -79,14 +77,56 @@ public class StoreService {
     }
 
     public StoreDTO updateStoreDTO(StoreDTO storeDTO) {
-        StoreEntity storeEntity = toEntity(storeDTO);
-        return toDTO(storeEntity);
+
+        ArrayList<MenuEntity> menuEntities = new ArrayList<>();
+        if (storeDTO.getMenus() != null) {
+            for (Long menu : storeDTO.getMenus()) {
+                menuEntities.add(menuRepository.findById(menu).get());
+            }
+        }
+
+        ArrayList<ReviewEntity> reviews = new ArrayList<>();
+        if (storeDTO.getReviews() != null) {
+            for (Long review : storeDTO.getReviews()) {
+                reviews.add(reviewRepository.findById(review).get());
+            }
+        }
+
+        StoreEntity storeEntity = storeRepository.findById(storeDTO.getSPK()).get();
+        storeEntity.setKids(storeDTO.isKids());
+        storeEntity.setTasty(storeDTO.isTasty());
+        storeEntity.setPrice(storeDTO.isPrice());
+        storeEntity.setCall(storeDTO.getCall());
+        storeEntity.setRoleModel(storeDTO.isRoleModel());
+        storeEntity.setCategory(storeDTO.getCategory());
+        storeEntity.setLocation1(storeDTO.getLocation1());
+        storeEntity.setLocation2(storeDTO.getLocation2());
+        storeEntity.setLocation3(storeDTO.getLocation3());
+        storeEntity.setStartTime(storeDTO.getStartTime());
+        storeEntity.setEndTime(storeDTO.getEndTime());
+        storeEntity.setName(storeDTO.getName());
+        storeEntity.setLocationX(storeEntity.getLocationX());
+        storeEntity.setLocationY(storeEntity.getLocationY());
+        storeEntity.setAdminUser(storeRepository.findById(storeDTO.getUPK()).get().getAdminUser());
+        storeEntity.setMenus(menuEntities);
+        storeEntity.setReviews(reviews);
+
+        return toDTO(storeRepository.save(storeEntity));
     }
 
 
     public void deleteStore(StoreDTO storeDTO) {
-        StoreEntity storeEntity = toEntity(storeDTO);
+        StoreEntity storeEntity = storeRepository.findById(storeDTO.getSPK()).get();
         storeRepository.delete(storeEntity);
+    }
+
+    public boolean storeDuplicationCheck(StoreDTO storeDTO) {
+        List<StoreEntity> result = storeRepository.findAllByNameAndLocation2(storeDTO.getName(), storeDTO.getLocation2());
+        if (result.isEmpty()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public void updateKids(int perPage, int page) throws IOException, URISyntaxException {
@@ -113,10 +153,29 @@ public class StoreService {
                     .category(i.get업종())
                     .reviews(null)
                     .build();
+            if (storeDuplicationCheck(object)) {
+                storeRepository.save(toEntity(object));
+            }
 
-            storeRepository.save(toEntity(object));
         }
     }
+
+    public void updateTasty(int perPage,int page) throws IOException, URISyntaxException{
+        String result = httpAPI.getTastyStore(perPage, page);
+        System.out.println(result);
+
+        StoreTastyPage storeTastyPage = gson.fromJson(result, StoreTastyPage.class);
+        StoreTastyResult storeTastyResult =  gson.fromJson(result, StoreTastyPage.class).getFoodKr;
+        ArrayList<StoreTastyItem> data = gson.fromJson(result, StoreTastyPage.class).getFoodKr.item;
+
+        System.out.println(storeTastyPage.toString());
+        System.out.println(storeTastyResult.toString());
+
+        for(StoreTastyItem item : data){
+            System.out.println(item.toString());
+        }
+    }
+
 
     public StoreDTO toDTO(StoreEntity storeEntity) {
         List<Long> reviewDTOS = new ArrayList<>();
@@ -181,7 +240,7 @@ public class StoreService {
                 .startTime(storeDTO.getStartTime())
                 .endTime(storeDTO.getEndTime())
                 .kids(storeDTO.isKids())
-                .price(storeDTO.isKids())
+                .price(storeDTO.isPrice())
                 .category(storeDTO.getCategory())
                 .tasty(storeDTO.isTasty())
                 .roleModel(storeDTO.isRoleModel())

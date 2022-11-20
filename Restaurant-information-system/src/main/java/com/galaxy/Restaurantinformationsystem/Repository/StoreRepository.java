@@ -8,7 +8,5 @@ import java.util.List;
 public interface StoreRepository extends JpaRepository<StoreEntity, Long> {
     List<StoreEntity> findByLocation1AndLocation2(String location1, String location2);
 
-    default List<StoreEntity> searchByLocation(String location1, String location2) {
-        return findByLocation1AndLocation2(location1, location2);
-    }
+    List<StoreEntity> findAllByNameAndLocation2(String Name, String location2);
 }

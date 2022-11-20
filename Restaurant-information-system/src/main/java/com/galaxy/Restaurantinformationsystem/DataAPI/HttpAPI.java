@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import javax.lang.model.type.ReferenceType;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -22,6 +23,9 @@ public class HttpAPI {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     @Value("${StoreKidsServiceKey}")
     String StoreKidsServiceKey;
+
+//    @Value("${StoreTastyServiceKey}")
+//    String StoreTastyServiceKey;
 
     public String getKidsStore(Integer perPage, Integer page) throws IOException, URISyntaxException {
         HttpClient Client = HttpClientBuilder.create().build();
@@ -39,7 +43,39 @@ public class HttpAPI {
                 .build();
         httpget.setURI(uri);
 
-        // HTTP GET mothod 실행
+        // HTTP GET method 실행
+        HttpResponse response = Client.execute(httpget);
+
+        // body 결과값 얻기
+        HttpEntity entity = response.getEntity();
+        String result = EntityUtils.toString(entity);
+
+        // 로그 남기기
+        logger.info(httpget.getURI().toString());
+        logger.info(StoreKidsServiceKey);
+
+        return result;
+    }
+
+    public String getTastyStore(Integer perPage, Integer page) throws URISyntaxException, IOException {
+        HttpClient Client = HttpClientBuilder.create().build();
+
+        // 파라미터
+        String baseURL = "http://apis.data.go.kr/6260000/FoodService/getFoodKr";
+
+
+        // URL 생성
+        HttpGet httpget = new HttpGet(baseURL);
+        URI uri = new URIBuilder(httpget.getURI())
+                .addParameter("serviceKey", StoreKidsServiceKey)
+                .addParameter("numOfRows", perPage.toString())
+                .addParameter("pageNo", page.toString())
+                .addParameter("resultType","json")
+                .build();
+        httpget.setURI(uri);
+        logger.info(httpget.getURI().toString());
+
+        // HTTP GET method 실행
         HttpResponse response = Client.execute(httpget);
 
         // body 결과값 얻기
