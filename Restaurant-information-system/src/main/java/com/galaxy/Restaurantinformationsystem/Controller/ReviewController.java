@@ -20,12 +20,12 @@ public class ReviewController {
 
     }
 
-    @PostMapping("create")
+    @PostMapping("/create")
     public ReviewDTO createReview(@RequestBody ReviewDTO reviewDTO) {
         return reviewService.createReview(reviewDTO);
     }
 
-    @PostMapping("udpate")
+    @PostMapping("/udpate")
     public ReviewDTO updateReview(@RequestBody ReviewDTO reviewDTO) {
         if (reviewDTO.getRPK() == null) {
             return null;
@@ -34,7 +34,7 @@ public class ReviewController {
         }
     }
 
-    @PostMapping("delete")
+    @PostMapping("/delete")
     @ResponseBody
     public String deleteReview(@RequestBody ReviewDTO reviewDTO) {
         if (reviewDTO.getRPK() == null) {
@@ -45,7 +45,7 @@ public class ReviewController {
         }
     }
 
-    @PostMapping("read")
+    @PostMapping("/read")
     public ReviewDTO readReview(@RequestBody ReviewDTO reviewDTO) {
         if (reviewDTO.getRPK() == null) {
             return null;
@@ -54,7 +54,7 @@ public class ReviewController {
         }
     }
 
-    @PostMapping("readStore")
+    @PostMapping("/readStore")
     public ArrayList<ReviewDTO> updateReview(@RequestBody StoreDTO storeDTO) {
         return reviewService.findByStore(storeDTO);
     }
