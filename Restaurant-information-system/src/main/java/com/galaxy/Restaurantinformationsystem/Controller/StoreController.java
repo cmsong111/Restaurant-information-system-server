@@ -39,7 +39,7 @@ public class StoreController {
     }
 
     @PostMapping("/update")
-    public StoreDTO updateStore(@RequestBody StoreDTO storeDTO) {
+    public StoreDTO updateUpdate(@RequestBody StoreDTO storeDTO) {
         if (storeDTO.getUPK() == null) {
             return storeService.updateStoreDTO(storeDTO);
         } else {
@@ -70,10 +70,6 @@ public class StoreController {
         return storeService.serchById(id);
     }
 
-    @PostMapping("update")
-    public StoreDTO storeUpdate(@RequestBody StoreDTO storeDTO) {
-        return storeService.updateStoreDTO(storeDTO);
-    }
 
     @ResponseBody
     @DeleteMapping("/delete")
