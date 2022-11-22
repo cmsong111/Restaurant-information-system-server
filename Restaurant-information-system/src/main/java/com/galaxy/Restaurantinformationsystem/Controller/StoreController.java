@@ -48,20 +48,21 @@ public class StoreController {
     }
 
     @GetMapping("/serch-location")
-    public ArrayList<StoreDTO> serchBylocation(@RequestBody StoreDTO storeDTO) {
-        ArrayList<StoreDTO> results = storeService.searchByLocationArray(storeDTO);
+    public ArrayList<StoreDTO> serchBylocation(@RequestParam String location1, String location2) {
+        //StoreDTO storeDTO = StoreDTO.builder().location1(location1).location2(location2).build();
+        ArrayList<StoreDTO> results = storeService.searchByLocationArray(location1, location2);
         return results;
     }
 
     @GetMapping("/serch-name")
-    public ArrayList<StoreDTO> serchByName(@RequestBody StoreDTO storeDTO) {
-        ArrayList<StoreDTO> results = storeService.serchByNameAndLocation(storeDTO);
+    public ArrayList<StoreDTO> serchByName(@RequestBody String location1, String location2, String name) {
+        ArrayList<StoreDTO> results = storeService.serchByNameAndLocation(location1, location2, name);
         return results;
     }
 
     @GetMapping("/serch-category")
-    public ArrayList<StoreDTO> serchByCategory(@RequestBody StoreDTO storeDTO) {
-        ArrayList<StoreDTO> results = storeService.serchByCategoryAndLocation2(storeDTO);
+    public ArrayList<StoreDTO> serchByCategory(@RequestBody String category, String location1, String location2) {
+        ArrayList<StoreDTO> results = storeService.serchByCategoryAndLocation2(category, location1, location2);
         return results;
     }
 
@@ -72,7 +73,7 @@ public class StoreController {
 
 
     @ResponseBody
-    @DeleteMapping("/delete")
+    @PostMapping("/delete")
     public String deleteStore(@RequestBody StoreDTO storeDTO) {
         if (storeDTO.getUPK() == null) {
             return "failed";

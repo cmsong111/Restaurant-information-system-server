@@ -62,17 +62,17 @@ public class StoreService {
     }
 
 
-    public ArrayList<StoreDTO> searchByLocationArray(StoreDTO storeDTO) {
+    public ArrayList<StoreDTO> searchByLocationArray(String location1, String location2) {
         ArrayList<StoreDTO> results = new ArrayList<>();
 
-        List<StoreEntity> storeEntityArrayList = storeRepository.findByLocation1AndLocation2(storeDTO.getLocation1(), storeDTO.getLocation2());
+        List<StoreEntity> storeEntityArrayList = storeRepository.findByLocation1AndLocation2(location1, location2);
 
-        //if (storeEntityArrayList != null) {
-        for (StoreEntity storeEntity : storeEntityArrayList) {
-            logger.info("store:" + storeEntity.toString());
-            results.add(toDTO(storeEntity));
+        if (storeEntityArrayList != null) {
+            for (StoreEntity storeEntity : storeEntityArrayList) {
+                logger.info("store:" + storeEntity.toString());
+                results.add(toDTO(storeEntity));
+            }
         }
-        // }
         return results;
     }
 
@@ -122,9 +122,9 @@ public class StoreService {
         storeRepository.delete(storeEntity);
     }
 
-    public ArrayList<StoreDTO> serchByNameAndLocation(StoreDTO storeDTO) {
+    public ArrayList<StoreDTO> serchByNameAndLocation(String location1, String location2, String name) {
         ArrayList<StoreDTO> results = new ArrayList<>();
-        List<StoreEntity> queried = storeRepository.findAllByNameAndLocation2(storeDTO.getName(), storeDTO.getLocation2());
+        List<StoreEntity> queried = storeRepository.findByNameAndLocation1AndLocation2(location1, location2, name);
         if (queried != null) {
             for (StoreEntity object : queried) {
                 results.add(toDTO(object));
@@ -133,9 +133,9 @@ public class StoreService {
         return results;
     }
 
-    public ArrayList<StoreDTO> serchByCategoryAndLocation2(StoreDTO storeDTO) {
+    public ArrayList<StoreDTO> serchByCategoryAndLocation2(String category, String location1, String location2) {
         ArrayList<StoreDTO> results = new ArrayList<>();
-        List<StoreEntity> queried = storeRepository.findAllByCategoryAndLocation2(storeDTO.getCategory(), storeDTO.getLocation2());
+        List<StoreEntity> queried = storeRepository.findAllByCategoryAndLocation1AndLocation2(category, location1, location2);
         if (queried != null) {
             for (StoreEntity object : queried) {
                 results.add(toDTO(object));
@@ -146,7 +146,7 @@ public class StoreService {
 
 
     public boolean storeDuplicationCheck(StoreDTO storeDTO) {
-        List<StoreEntity> result = storeRepository.findAllByNameAndLocation2(storeDTO.getName(), storeDTO.getLocation2());
+        List<StoreEntity> result = storeRepository.findByNameAndLocation1AndLocation2(storeDTO.getName(), storeDTO.getLocation1(), storeDTO.getLocation2());
         if (result.isEmpty()) {
             return true;
         } else {

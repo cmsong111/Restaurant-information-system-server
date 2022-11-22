@@ -45,7 +45,7 @@ public class UserController {
     }
 
     //삭제
-    @DeleteMapping("/delete")
+    @PostMapping("/delete")
     public String userDelete(@RequestBody UserDTO user) {
         userService.deleteUser(user);
         return "Delete Done";
