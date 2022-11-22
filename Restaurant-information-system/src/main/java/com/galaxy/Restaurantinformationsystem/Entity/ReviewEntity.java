@@ -22,9 +22,9 @@ public class ReviewEntity {
     private String title;
     private String content;
     private String image;
-    @JoinColumn(name = "menu")
+    @JoinColumn(name = "spk")
     @ManyToOne
-    private MenuEntity menuEntity;
+    private StoreEntity storeEntity;
     @JoinColumn(name = "upk")
     @ManyToOne
     private UserEntity userEntity;

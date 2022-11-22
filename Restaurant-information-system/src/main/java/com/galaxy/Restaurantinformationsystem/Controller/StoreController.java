@@ -55,7 +55,7 @@ public class StoreController {
     }
 
     @GetMapping("/serch-name")
-    public ArrayList<StoreDTO> serchByName(@RequestBody String location1, String location2, String name) {
+    public ArrayList<StoreDTO> serchByName(@RequestParam String location1, String location2, String name) {
         ArrayList<StoreDTO> results = storeService.serchByNameAndLocation(location1, location2, name);
         return results;
     }

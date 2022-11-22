@@ -5,6 +5,7 @@ import com.galaxy.Restaurantinformationsystem.DTO.StoreDTO;
 import com.galaxy.Restaurantinformationsystem.Entity.ReviewEntity;
 import com.galaxy.Restaurantinformationsystem.Repository.MenuRepository;
 import com.galaxy.Restaurantinformationsystem.Repository.ReviewRepository;
+import com.galaxy.Restaurantinformationsystem.Repository.StoreRepository;
 import com.galaxy.Restaurantinformationsystem.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,12 +18,14 @@ public class ReviewService {
     ReviewRepository reviewRepository;
     MenuRepository menuRepository;
     UserRepository userRepository;
+    StoreRepository storeRepository;
 
     @Autowired
-    public ReviewService(ReviewRepository reviewRepository, MenuRepository menuRepository, UserRepository userRepository) {
+    public ReviewService(ReviewRepository reviewRepository, MenuRepository menuRepository, StoreRepository storeRepository,UserRepository userRepository) {
         this.reviewRepository = reviewRepository;
         this.menuRepository = menuRepository;
         this.userRepository = userRepository;
+        this.storeRepository = storeRepository;
     }
 
     public ReviewDTO createReview(ReviewDTO reviewDTO) {
@@ -58,7 +61,7 @@ public class ReviewService {
                 .title(reviewDTO.getTitle())
                 .content(reviewDTO.getContent())
                 .image(reviewDTO.getImage())
-                .menuEntity(menuRepository.findById(reviewDTO.getRPK()).get())
+                .storeEntity(storeRepository.findById(reviewDTO.getSPK()).get())
                 .userEntity(userRepository.findById(reviewDTO.getRPK()).get())
                 .build();
     }
@@ -69,8 +72,8 @@ public class ReviewService {
                 .title(reviewEntity.getTitle())
                 .content(reviewEntity.getContent())
                 .image(reviewEntity.getImage())
-                .userDTO(reviewEntity.getUserEntity().getUPK())
-                .menuDTO(reviewEntity.getMenuEntity().getMPK())
+                .UPK(reviewEntity.getUserEntity().getUPK())
+                .SPK(reviewEntity.getStoreEntity().getSPK())
                 .build();
     }
 }

@@ -14,8 +14,8 @@ public class ReviewDTO {
     private String title;
     private String content;
     private String image;
-    private Long menuDTO;
-    private Long userDTO;
+    private Long SPK;
+    private Long UPK;
 
 
 }
