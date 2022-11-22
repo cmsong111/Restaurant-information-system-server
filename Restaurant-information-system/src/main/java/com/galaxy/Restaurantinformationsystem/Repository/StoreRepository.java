@@ -12,6 +12,10 @@ public interface StoreRepository extends JpaRepository<StoreEntity, Long> {
 
     List<StoreEntity> findByNameAndLocation1AndLocation2(String Name, String Location1, String location2);
 
+    List<StoreEntity> findByNameLikeAndLocation1AndLocation2(String name, String location1, String location2);
+
+
+
     ArrayList<StoreEntity> findAllByCategoryAndLocation1AndLocation2(String category, String location2, String name);
 
 }

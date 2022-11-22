@@ -124,7 +124,7 @@ public class StoreService {
 
     public ArrayList<StoreDTO> serchByNameAndLocation(String location1, String location2, String name) {
         ArrayList<StoreDTO> results = new ArrayList<>();
-        List<StoreEntity> queried = storeRepository.findByNameAndLocation1AndLocation2(location1, location2, name);
+        List<StoreEntity> queried = storeRepository.findByNameLikeAndLocation1AndLocation2(name, location1, location2);
         if (queried != null) {
             for (StoreEntity object : queried) {
                 results.add(toDTO(object));

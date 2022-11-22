@@ -40,7 +40,7 @@ public class StoreController {
 
     @PostMapping("/update")
     public StoreDTO updateUpdate(@RequestBody StoreDTO storeDTO) {
-        if (storeDTO.getUPK() == null) {
+        if (storeDTO.getUPK() != null) {
             return storeService.updateStoreDTO(storeDTO);
         } else {
             return null;
