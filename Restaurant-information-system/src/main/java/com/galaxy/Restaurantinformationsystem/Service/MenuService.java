@@ -6,6 +6,8 @@ import com.galaxy.Restaurantinformationsystem.Repository.MenuRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+
 @Service
 public class MenuService {
 
@@ -23,6 +25,17 @@ public class MenuService {
 
     public MenuDTO readMenuDTO(MenuDTO MenuDTO) {
         return null;
+    }
+
+    public ArrayList<MenuDTO> readMenuInStore(Long spk) {
+        ArrayList<MenuDTO> result = new ArrayList<>();
+        ArrayList<MenuEntity> found = menuRepository.findByStore_SPK(spk);
+        if (found != null) {
+            for (MenuEntity menuEntity : found) {
+                result.add(toDTO(menuEntity));
+            }
+        }
+        return result;
     }
 
     public MenuDTO updateMenuDTO(MenuDTO menuDTO) {

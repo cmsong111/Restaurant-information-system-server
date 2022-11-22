@@ -1,39 +1,43 @@
 package com.galaxy.Restaurantinformationsystem.Controller;
 
 import com.galaxy.Restaurantinformationsystem.DTO.MenuDTO;
+import com.galaxy.Restaurantinformationsystem.Entity.MenuEntity;
 import com.galaxy.Restaurantinformationsystem.Service.MenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+
 @RequestMapping("/menu")
 public class MenuController {
 
-    com.galaxy.Restaurantinformationsystem.Service.MenuService MenuService;
+    MenuService menuService;
+
 
     @Autowired
     public MenuController(MenuService MenuService) {
-        this.MenuService = MenuService;
+        this.menuService = MenuService;
     }
 
     @PostMapping("/create")
     public MenuDTO createMenu(@RequestBody MenuDTO menuDTO) {
-        return MenuService.createMenuDTO(menuDTO);
+        return menuService.createMenuDTO(menuDTO);
     }
 
     @PostMapping("/update")
     public MenuDTO updateMenu(@RequestBody MenuDTO menuDTO) {
-        return MenuService.updateMenuDTO(menuDTO);
+        return menuService.updateMenuDTO(menuDTO);
     }
 
-    @PostMapping("/read")
-    public MenuDTO readMenu(@RequestBody MenuDTO menuDTO) {
-        return MenuService.readMenuDTO(menuDTO);
+    @GetMapping("/readInStore")
+    public ArrayList<MenuDTO> read(@RequestParam Long spk) {
+        return menuService.readMenuInStore(spk);
     }
 
     @ResponseBody
-    @DeleteMapping("/delete")
+    @PostMapping("/delete")
     public String deleteMenu(@RequestBody MenuDTO MenuDTO) {
-        MenuService.deleteMenu(MenuDTO);
+        menuService.deleteMenu(MenuDTO);
         return "delete Requested";
     }
 }
