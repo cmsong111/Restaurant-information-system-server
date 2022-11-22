@@ -201,29 +201,26 @@ public class StoreService {
                     location[2] = location[2] + location[lo];
                 }
             }
-
             // 객체 변환
             StoreDTO object = StoreDTO.builder()
                     .kids(true)
                     .name(i.get가맹점명칭())
                     .call(i.get전화번호())
                     .UPK(1L)
-                    .locationY(Double.valueOf(i.get경도()))
-                    .locationX(Double.valueOf(i.get위도()))
+                    .locationY(Double.valueOf(i.get위도()))
+                    .locationX(Double.valueOf(i.get경도()))
                     .location1(location[0])
                     .location2(location[1])
                     .location3(location[2])
                     .category(i.get업종())
                     .reviews(null)
                     .build();
-
             // 저장 및 업데이트
             if (storeDuplicationCheck(object)) {
                 this.createStoreDTO(object);
             } else {
                 this.updateStoreDTO(object);
             }
-
         }
     }
 
@@ -232,11 +229,31 @@ public class StoreService {
         ArrayList<StoreTastyItem> data = gson.fromJson(result, StoreTastyPage.class).getFoodKr.item;
 
         for (StoreTastyItem item : data) {
-            System.out.println(item.toString());
+            // 주소 파싱
+            String[] location = item.getADDR1().split(" ");
+            if (location.length > 2) {
+                for (int lo = 3; lo < location.length; lo++) {
+                    location[2] = location[2] + location[lo];
+                }
+            }
+            //객체 생성
+            StoreDTO storeDTO = StoreDTO.builder()
+                    .name(item.getMAIN_TITLE())
+                    .locationX(item.getLNG())
+                    .locationY(item.getLAT())
+                    .location1(location[0])
+                    .location2(location[1])
+                    .location3(location[2])
+                    .category(item.getCNTCT_TEL())
+                    .build();
+
+            // 저장 및 업데이트
+            if (storeDuplicationCheck(storeDTO)) {
+                this.createStoreDTO(storeDTO);
+            } else {
+                this.updateStoreDTO(storeDTO);
+            }
         }
-        //TODO 객체 DB에 저장 하기
-
-
     }
 
 
