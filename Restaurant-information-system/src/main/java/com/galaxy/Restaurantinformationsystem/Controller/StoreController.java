@@ -48,7 +48,8 @@ public class StoreController {
     }
 
     @GetMapping("/serch-location")
-    public ArrayList<StoreDTO> serchBylocation(@RequestBody StoreDTO storeDTO) {
+    public ArrayList<StoreDTO> serchBylocation(@RequestParam String location1, String location2) {
+        StoreDTO storeDTO = StoreDTO.builder().location1(location1).location2(location2).build();
         ArrayList<StoreDTO> results = storeService.searchByLocationArray(storeDTO);
         return results;
     }
