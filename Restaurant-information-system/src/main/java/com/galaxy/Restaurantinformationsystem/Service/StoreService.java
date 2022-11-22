@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -22,6 +23,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional(readOnly = true)
 public class StoreService {
 
     Gson gson = new Gson();
@@ -136,8 +138,10 @@ public class StoreService {
         if (storeDTO.getLocationY() != 0) {
             storeEntity.setLocationY(storeEntity.getLocationY());
         }
-        if (storeDTO.getUPK() != 0) {
+        if (storeDTO.getUPK() != 1L) {
             storeEntity.setAdminUser(storeRepository.findById(storeDTO.getUPK()).get().getAdminUser());
+        } else {
+            storeDTO.setUPK(1L);
         }
         if (!menuEntities.isEmpty()) {
             storeEntity.setMenus(menuEntities);
@@ -219,6 +223,8 @@ public class StoreService {
             if (storeDuplicationCheck(object)) {
                 this.createStoreDTO(object);
             } else {
+                Long spk = storeRepository.findByNameAndLocation2(object.getName(), object.getLocation2()).getSPK();
+                object.setSPK(spk);
                 this.updateStoreDTO(object);
             }
         }
@@ -231,36 +237,47 @@ public class StoreService {
         for (StoreTastyItem item : data) {
             // 주소 파싱
             String[] location = item.getADDR1().split(" ");
-            if (location.length > 2) {
-                for (int lo = 3; lo < location.length; lo++) {
-                    location[2] = location[2] + location[lo];
+            String location1 = location[0];
+            String location2 = null;
+            if (location.length > 1) {
+                location2 = location[1];
+                for (int ii = 1; ii < location.length; ii++) {
+                    location2 = location2 + location[ii];
                 }
             }
+
             //객체 생성
             StoreDTO storeDTO = StoreDTO.builder()
                     .name(item.getMAIN_TITLE())
                     .locationX(item.getLNG())
                     .locationY(item.getLAT())
-                    .location1(location[0])
-                    .location2(location[1])
-                    .location3(location[2])
+                    .location1("부산광역시")
+                    .location2(location1)
+                    .location3(location2)
+                    .tasty(true)
+                    .call(item.getCNTCT_TEL())
                     .category(item.getCNTCT_TEL())
+                    .UPK(1L)
                     .build();
 
             // 저장 및 업데이트
             if (storeDuplicationCheck(storeDTO)) {
                 this.createStoreDTO(storeDTO);
             } else {
+                Long spk = storeRepository.findByNameAndLocation2(storeDTO.getName(), storeDTO.getLocation2()).getSPK();
+                storeDTO.setSPK(spk);
                 this.updateStoreDTO(storeDTO);
             }
         }
     }
 
 
+
     public StoreDTO toDTO(StoreEntity storeEntity) {
         List<Long> reviewDTOS = new ArrayList<>();
-        if (storeEntity.getReviews() != null) {
-            for (ReviewEntity review : storeEntity.getReviews()) {
+        List<ReviewEntity> arr = storeEntity.getReviews();
+        if (arr != null) {
+            for (ReviewEntity review : arr) {
                 reviewDTOS.add(review.getRPK());
             }
         }
