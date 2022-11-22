@@ -93,25 +93,58 @@ public class StoreService {
         }
 
         StoreEntity storeEntity = storeRepository.findById(storeDTO.getSPK()).get();
-        storeEntity.setKids(storeDTO.isKids());
-        storeEntity.setTasty(storeDTO.isTasty());
-        storeEntity.setPrice(storeDTO.isPrice());
-        storeEntity.setCall(storeDTO.getCall());
-        storeEntity.setRoleModel(storeDTO.isRoleModel());
+
+        if (storeEntity.isKids() != storeDTO.isKids()) {
+            storeEntity.setKids(storeDTO.isKids());
+        }
+        if (storeEntity.isTasty() != storeDTO.isTasty()) {
+            storeEntity.setTasty(storeDTO.isTasty());
+        }
+        if (storeEntity.isPrice() != storeDTO.isPrice()) {
+            storeEntity.setPrice(storeDTO.isPrice());
+        }
+        if (storeEntity.isRoleModel() != storeDTO.isRoleModel()) {
+            storeEntity.setRoleModel(storeDTO.isRoleModel());
+        }
+        if (storeDTO.getCall() != null) {
+            storeEntity.setCall(storeDTO.getCall());
+        }
         if (storeDTO.getCategory() != null) {
             storeEntity.setCategory(storeDTO.getCategory());
         }
-        storeEntity.setLocation1(storeDTO.getLocation1());
-        storeEntity.setLocation2(storeDTO.getLocation2());
-        storeEntity.setLocation3(storeDTO.getLocation3());
-        storeEntity.setStartTime(storeDTO.getStartTime());
-        storeEntity.setEndTime(storeDTO.getEndTime());
-        storeEntity.setName(storeDTO.getName());
-        storeEntity.setLocationX(storeEntity.getLocationX());
-        storeEntity.setLocationY(storeEntity.getLocationY());
-        storeEntity.setAdminUser(storeRepository.findById(storeDTO.getUPK()).get().getAdminUser());
-        storeEntity.setMenus(menuEntities);
-        storeEntity.setReviews(reviews);
+        if (storeDTO.getLocation1() != null) {
+            storeEntity.setLocation1(storeDTO.getLocation1());
+        }
+        if (storeDTO.getLocation2() != null) {
+            storeEntity.setLocation2(storeDTO.getLocation2());
+        }
+        if (storeDTO.getLocation3() != null) {
+            storeEntity.setLocation3(storeDTO.getLocation3());
+        }
+        if (storeDTO.getStartTime() != null) {
+            storeEntity.setStartTime(storeDTO.getStartTime());
+        }
+        if (storeDTO.getEndTime() != null) {
+            storeEntity.setEndTime(storeDTO.getEndTime());
+        }
+        if (storeDTO.getName() != null) {
+            storeEntity.setName(storeDTO.getName());
+        }
+        if (storeDTO.getLocationX() != 0) {
+            storeEntity.setLocationX(storeEntity.getLocationX());
+        }
+        if (storeDTO.getLocationY() != 0) {
+            storeEntity.setLocationY(storeEntity.getLocationY());
+        }
+        if (storeDTO.getUPK() != 0) {
+            storeEntity.setAdminUser(storeRepository.findById(storeDTO.getUPK()).get().getAdminUser());
+        }
+        if (!menuEntities.isEmpty()) {
+            storeEntity.setMenus(menuEntities);
+        }
+        if (!reviews.isEmpty()) {
+            storeEntity.setReviews(reviews);
+        }
 
         return toDTO(storeRepository.save(storeEntity));
     }
@@ -163,8 +196,13 @@ public class StoreService {
 
         for (StoreKidDataDTO i : data) {
             String[] location = i.get도로명주소().split(" ");
+            if (location.length > 2) {
+                for (int lo = 3; lo < location.length; lo++) {
+                    location[2] = location[2] + location[lo];
+                }
+            }
 
-
+            // 객체 변환
             StoreDTO object = StoreDTO.builder()
                     .kids(true)
                     .name(i.get가맹점명칭())
@@ -178,8 +216,12 @@ public class StoreService {
                     .category(i.get업종())
                     .reviews(null)
                     .build();
+
+            // 저장 및 업데이트
             if (storeDuplicationCheck(object)) {
-                storeRepository.save(toEntity(object));
+                this.createStoreDTO(object);
+            } else {
+                this.updateStoreDTO(object);
             }
 
         }
@@ -192,6 +234,9 @@ public class StoreService {
         for (StoreTastyItem item : data) {
             System.out.println(item.toString());
         }
+        //TODO 객체 DB에 저장 하기
+
+
     }
 
 

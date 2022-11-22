@@ -131,8 +131,6 @@ class updateKidsMutilthred extends Thread {
         storeService.updateKids(perPage, page);
         logger.info("Update Finished");
     }
-
-
 }
 
 
