@@ -4,10 +4,11 @@ import com.galaxy.Restaurantinformationsystem.DTO.MenuDTO;
 import com.galaxy.Restaurantinformationsystem.Entity.MenuEntity;
 import com.galaxy.Restaurantinformationsystem.Service.MenuService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-
+@RestController
 @RequestMapping("/menu")
 public class MenuController {
 

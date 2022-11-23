@@ -22,10 +22,8 @@ public class ReviewEntity {
     private String title;
     private String content;
     private String image;
-    @JoinColumn(name = "spk")
     @ManyToOne
     private StoreEntity storeEntity;
-    @JoinColumn(name = "upk")
     @ManyToOne
     private UserEntity userEntity;
 }

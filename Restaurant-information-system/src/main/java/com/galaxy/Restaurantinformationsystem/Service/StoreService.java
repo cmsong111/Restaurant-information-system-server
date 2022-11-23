@@ -230,33 +230,32 @@ public class StoreService {
         }
     }
 
-    public void updateTasty(int perPage, int page) throws IOException, URISyntaxException {
-        String result = httpAPI.getTastyStore(perPage, page);
-        ArrayList<StoreTastyItem> data = gson.fromJson(result, StoreTastyPage.class).getFoodKr.item;
+            public void updateTasty(int perPage, int page) throws IOException, URISyntaxException {
+                String result = httpAPI.getTastyStore(perPage, page);
+                ArrayList<StoreTastyItem> data = gson.fromJson(result, StoreTastyPage.class).getFoodKr.item;
 
-        for (StoreTastyItem item : data) {
-            // 주소 파싱
-            String[] location = item.getADDR1().split(" ");
-            String location1 = location[0];
-            String location2 = null;
-            if (location.length > 1) {
-                location2 = location[1];
-                for (int ii = 1; ii < location.length; ii++) {
-                    location2 = location2 + location[ii];
-                }
-            }
+                for (StoreTastyItem item : data) {
+                    // 주소 파싱
+                    String[] location = item.getADDR1().split(" ");
+                    String location1 = location[0];
+                    String location2 = null;
+                    if (location.length > 1) {
+                        location2 = location[1];
+                        for (int ii = 1; ii < location.length; ii++) {
+                            location2 = location2 + location[ii];
+                        }
+                    }
 
-            //객체 생성
-            StoreDTO storeDTO = StoreDTO.builder()
-                    .name(item.getMAIN_TITLE())
-                    .locationX(item.getLNG())
-                    .locationY(item.getLAT())
-                    .location1("부산광역시")
-                    .location2(location1)
-                    .location3(location2)
-                    .tasty(true)
-                    .call(item.getCNTCT_TEL())
-                    .category(item.getCNTCT_TEL())
+                    //객체 생성
+                    StoreDTO storeDTO = StoreDTO.builder()
+                            .name(item.getMAIN_TITLE())
+                            .locationX(item.getLNG())
+                            .locationY(item.getLAT())
+                            .location1("부산광역시")
+                            .location2(location1)
+                            .location3(location2)
+                            .tasty(true)
+                            .call(item.getCNTCT_TEL())
                     .UPK(1L)
                     .build();
 

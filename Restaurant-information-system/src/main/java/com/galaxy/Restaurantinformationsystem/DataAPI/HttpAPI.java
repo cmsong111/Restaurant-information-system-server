@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import javax.lang.model.type.ReferenceType;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -70,7 +69,7 @@ public class HttpAPI {
                 .addParameter("serviceKey", StoreKidsServiceKey)
                 .addParameter("numOfRows", perPage.toString())
                 .addParameter("pageNo", page.toString())
-                .addParameter("resultType","json")
+                .addParameter("resultType", "json")
                 .build();
         httpget.setURI(uri);
         logger.info(httpget.getURI().toString());

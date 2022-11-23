@@ -3,6 +3,7 @@ package com.galaxy.Restaurantinformationsystem.Service;
 import com.galaxy.Restaurantinformationsystem.DTO.MenuDTO;
 import com.galaxy.Restaurantinformationsystem.Entity.MenuEntity;
 import com.galaxy.Restaurantinformationsystem.Repository.MenuRepository;
+import com.galaxy.Restaurantinformationsystem.Repository.StoreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,10 +13,12 @@ import java.util.ArrayList;
 public class MenuService {
 
     MenuRepository menuRepository;
+    StoreRepository storeRepository;
 
     @Autowired
-    public MenuService(MenuRepository MenuRepository) {
+    public MenuService(MenuRepository MenuRepository,StoreRepository storeRepository) {
         this.menuRepository = MenuRepository;
+        this.storeRepository = storeRepository;
     }
 
     public MenuDTO createMenuDTO(MenuDTO MenuDTO) {
@@ -41,7 +44,7 @@ public class MenuService {
     public MenuDTO updateMenuDTO(MenuDTO menuDTO) {
         MenuEntity menuEntity = menuRepository.getReferenceById(menuDTO.getMPK());
         menuEntity.setName(menuDTO.getName());
-        menuEntity.setStore(menuRepository.findById(menuDTO.getSPK()).get().getStore());
+        menuEntity.setStore(storeRepository.findById(menuDTO.getSPK()).get());
         menuEntity.setImage(menuEntity.getImage());
         menuEntity.setPrice(menuEntity.getPrice());
 
@@ -60,7 +63,7 @@ public class MenuService {
                 .name(menuDTO.getName())
                 .price(menuDTO.getPrice())
                 .image(menuDTO.getImage())
-                .store(menuRepository.findById(menuDTO.getSPK()).get().getStore())
+                .store(storeRepository.findById(menuDTO.getSPK()).get())
                 .build();
     }
 
