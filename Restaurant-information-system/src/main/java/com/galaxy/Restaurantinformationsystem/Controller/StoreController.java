@@ -116,6 +116,12 @@ public class StoreController {
         storeService.updateTasty(perPage, page);
         return "update requested!";
     }
+
+    @ResponseBody
+    @PostMapping("/serch-overwall")
+    public ArrayList<StoreDTO> serchOverwall(@RequestBody StoreDTO storeDTO){
+        return storeService.fineOverAll(storeDTO);
+    }
 }
 
 @Builder

@@ -270,6 +270,18 @@ public class StoreService {
         }
     }
 
+    public ArrayList<StoreDTO> fineOverAll(StoreDTO storeDTO){
+        ArrayList<StoreEntity> queried = storeRepository.findByCategoryAndLocation1AndLocation2AndKidsAndPriceAndTastyAndRoleModel( storeDTO.getCategory(), storeDTO.getLocation1(), storeDTO.getLocation2(), storeDTO.isKids(), storeDTO.isPrice(), storeDTO.isTasty(), storeDTO.isRoleModel());
+        ArrayList<StoreDTO> results = new ArrayList<>();
+
+        if (queried != null) {
+            for (StoreEntity object : queried) {
+                results.add(toDTO(object));
+            }
+        }
+        return results;
+    }
+
 
 
     public StoreDTO toDTO(StoreEntity storeEntity) {
