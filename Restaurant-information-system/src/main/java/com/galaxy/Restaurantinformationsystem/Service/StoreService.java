@@ -10,6 +10,7 @@ import com.galaxy.Restaurantinformationsystem.Repository.ReviewRepository;
 import com.galaxy.Restaurantinformationsystem.Repository.StoreRepository;
 import com.galaxy.Restaurantinformationsystem.Repository.UserRepository;
 import com.google.gson.Gson;
+import org.hibernate.cache.spi.support.AbstractReadWriteAccess;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -266,6 +267,37 @@ public class StoreService {
                 Long spk = storeRepository.findByNameAndLocation2(storeDTO.getName(), storeDTO.getLocation2()).getSPK();
                 storeDTO.setSPK(spk);
                 this.updateStoreDTO(storeDTO);
+            }
+        }
+    }
+
+    public void updateGoodPrice(int perPage, int page) throws IOException, URISyntaxException {
+        String result = httpAPI.getGoodPriceStore(perPage, page);
+        ArrayList<StoreGoodDataDTO> data = gson.fromJson(result, StoreGoodPageDTO.class).getData();
+
+        for (StoreGoodDataDTO i : data) {
+            String[] location = i.get도로명주소().split(" ");
+            if (location.length > 2) {
+                for (int j = 3; j < location.length; j++) {
+                    location[2] = location[2] + location[j];
+                }
+            }
+
+            // 객체 변환
+            StoreDTO object = StoreDTO.builder()
+                    .name(i.get업소명())
+                    .category(i.get업소구문())
+                    .location1(location[0])
+                    .location2(location[1])
+                    .location3(location[2])
+                    .call(i.get전화번호())
+                    .build();
+
+            // 저장 및 업데이트
+            if (storeDuplicationCheck(object)) {
+                this.createStoreDTO(object);
+            } else {
+                this.updateStoreDTO(object);
             }
         }
     }

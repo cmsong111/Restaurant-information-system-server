@@ -2,6 +2,7 @@ package com.galaxy.Restaurantinformationsystem.Controller;
 
 import com.galaxy.Restaurantinformationsystem.DTO.StoreDTO;
 import com.galaxy.Restaurantinformationsystem.DataAPI.HttpAPI;
+import com.galaxy.Restaurantinformationsystem.DataAPI.StoreGoodPageDTO;
 import com.galaxy.Restaurantinformationsystem.DataAPI.StoreKidsPageDTO;
 import com.galaxy.Restaurantinformationsystem.Service.StoreService;
 import com.google.gson.Gson;
@@ -115,6 +116,25 @@ public class StoreController {
         int page = 1;
         storeService.updateTasty(perPage, page);
         return "update requested!";
+    }
+
+    @ResponseBody
+    @PostMapping("/update-price")
+    public String updatePrice(Object page) throws IOException, URISyntaxException {
+
+        // Data count 구하기
+        int Totalcount = gson.fromJson(httpAPI.getGoodPriceStore(1, 1), StoreGoodPageDTO.class).getTotalCount();
+        int perPage = 500;
+        int forCount = (Totalcount / perPage) + 1;
+
+        logger.info("Total Count is : " + Totalcount);
+        logger.info("for Count is : " + forCount);
+
+        for (int Page = 1; Page < forCount + 1; Page++) {
+            storeService.updateGoodPrice(perPage, (Integer) page);
+        }
+
+        return "update requested";
     }
 
     @ResponseBody

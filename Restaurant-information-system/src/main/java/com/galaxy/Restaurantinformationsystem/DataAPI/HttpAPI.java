@@ -87,4 +87,35 @@ public class HttpAPI {
 
         return result;
     }
+
+    public String getGoodPriceStore(Integer perPage, Integer page) throws URISyntaxException, IOException {
+        HttpClient Client = HttpClientBuilder.create().build();
+
+        // 파라미터
+        String baseURL = "https://apis.data.go.kr/6260000/GoodPriceStoreService/getGoodPriceStore";
+
+        // URL 생성
+        HttpGet httpget = new HttpGet(baseURL);
+        URI uri = new URIBuilder(httpget.getURI())
+                .addParameter("serviceKey", StoreKidsServiceKey)
+                .addParameter("numOfRows", perPage.toString())
+                .addParameter("pageNo", page.toString())
+                .addParameter("resultType", "json")
+                .build();
+        httpget.setURI(uri);
+        logger.info(httpget.getURI().toString());
+
+        // HTTP GET method 실행
+        HttpResponse response = Client.execute(httpget);
+
+        // body 결과값 얻기
+        HttpEntity entity = response.getEntity();
+        String result = EntityUtils.toString(entity);
+
+        //로그 남기기
+        logger.info(httpget.getURI().toString());
+        logger.info(StoreKidsServiceKey);
+
+        return result;
+    }
 }
