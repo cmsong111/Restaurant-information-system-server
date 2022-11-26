@@ -47,4 +47,6 @@ public class StoreEntity {
     @JoinColumn(name = "upk")
     @Nullable
     private UserEntity adminUser;
+    private String image;
+
 }

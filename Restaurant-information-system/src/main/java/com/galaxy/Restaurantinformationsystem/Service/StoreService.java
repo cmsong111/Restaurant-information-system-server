@@ -149,6 +149,9 @@ public class StoreService {
         if (!reviews.isEmpty()) {
             storeEntity.setReviews(reviews);
         }
+        if(storeDTO.getImage() != null){
+            storeEntity.setImage(storeEntity.getImage());
+        }
 
         return toDTO(storeRepository.save(storeEntity));
     }
@@ -320,6 +323,7 @@ public class StoreService {
                 .UPK(storeEntity.getAdminUser().getUPK())
                 .menus(menuDTOs)
                 .reviews(reviewDTOS)
+                .image(storeEntity.getImage())
                 .build();
     }
 
@@ -357,6 +361,7 @@ public class StoreService {
                 .adminUser(userRepository.findById(storeDTO.getUPK()).get())
                 .reviews(reviewEntities)
                 .menus(menuEntities)
+                .image(storeDTO.getImage())
                 .build();
 
     }
