@@ -61,7 +61,7 @@ public class StoreController {
     }
 
     @GetMapping("/serch-category")
-    public ArrayList<StoreDTO> serchByCategory(@RequestBody String category, String location1, String location2) {
+    public ArrayList<StoreDTO> serchByCategory(@RequestParam String category, String location1, String location2) {
         ArrayList<StoreDTO> results = storeService.serchByCategoryAndLocation2(category, location1, location2);
         return results;
     }
