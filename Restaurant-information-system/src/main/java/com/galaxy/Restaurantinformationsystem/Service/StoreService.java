@@ -78,7 +78,9 @@ public class StoreService {
         return results;
     }
 
+    @Transactional
     public StoreDTO updateStoreDTO(StoreDTO storeDTO) {
+        logger.info(storeDTO.toString());
 
         ArrayList<MenuEntity> menuEntities = new ArrayList<>();
         if (storeDTO.getMenus() != null) {
@@ -157,9 +159,10 @@ public class StoreService {
     }
 
 
+    @Transactional
     public void deleteStore(StoreDTO storeDTO) {
-        StoreEntity storeEntity = storeRepository.findById(storeDTO.getSPK()).get();
-        storeRepository.delete(storeEntity);
+        //StoreEntity storeEntity = storeRepository.findById(storeDTO.getSPK()).get();
+        storeRepository.deleteById(storeDTO.getSPK());
     }
 
     public ArrayList<StoreDTO> serchByNameAndLocation(String location1, String location2, String name) {

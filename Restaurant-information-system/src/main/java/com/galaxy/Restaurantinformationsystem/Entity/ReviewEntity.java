@@ -22,8 +22,8 @@ public class ReviewEntity {
     private String title;
     private String content;
     private String image;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     private StoreEntity storeEntity;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     private UserEntity userEntity;
 }

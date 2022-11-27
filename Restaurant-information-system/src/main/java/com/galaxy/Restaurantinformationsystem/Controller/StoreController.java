@@ -40,7 +40,7 @@ public class StoreController {
 
     @PostMapping("/update")
     public StoreDTO updateUpdate(@RequestBody StoreDTO storeDTO) {
-        if (storeDTO.getUPK() != null) {
+        if (storeDTO.getSPK() != null) {
             return storeService.updateStoreDTO(storeDTO);
         } else {
             return null;
@@ -75,7 +75,7 @@ public class StoreController {
     @ResponseBody
     @PostMapping("/delete")
     public String deleteStore(@RequestBody StoreDTO storeDTO) {
-        if (storeDTO.getUPK() == null) {
+        if (storeDTO.getSPK() == null) {
             return "failed";
         } else {
             storeService.deleteStore(storeDTO);

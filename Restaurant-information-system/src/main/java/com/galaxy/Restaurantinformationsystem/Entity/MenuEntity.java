@@ -21,7 +21,7 @@ public class MenuEntity {
     private String name;
     private int price;
     private String image;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "spk")
     private StoreEntity store;
 }
