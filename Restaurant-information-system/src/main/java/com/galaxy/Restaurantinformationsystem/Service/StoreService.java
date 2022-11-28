@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -152,7 +153,7 @@ public class StoreService {
         if (!reviews.isEmpty()) {
             storeEntity.setReviews(reviews);
         }
-        if(storeDTO.getImage() != null){
+        if (storeDTO.getImage() != null) {
             storeEntity.setImage(storeEntity.getImage());
         }
 
@@ -237,32 +238,32 @@ public class StoreService {
         }
     }
 
-            public void updateTasty(int perPage, int page) throws IOException, URISyntaxException {
-                String result = httpAPI.getTastyStore(perPage, page);
-                ArrayList<StoreTastyItem> data = gson.fromJson(result, StoreTastyPage.class).getFoodKr.item;
+    public void updateTasty(int perPage, int page) throws IOException, URISyntaxException {
+        String result = httpAPI.getTastyStore(perPage, page);
+        ArrayList<StoreTastyItem> data = gson.fromJson(result, StoreTastyPage.class).getFoodKr.item;
 
-                for (StoreTastyItem item : data) {
-                    // 주소 파싱
-                    String[] location = item.getADDR1().split(" ");
-                    String location1 = location[0];
-                    String location2 = null;
-                    if (location.length > 1) {
-                        location2 = location[1];
-                        for (int ii = 1; ii < location.length; ii++) {
-                            location2 = location2 + location[ii];
-                        }
-                    }
+        for (StoreTastyItem item : data) {
+            // 주소 파싱
+            String[] location = item.getADDR1().split(" ");
+            String location1 = location[0];
+            String location2 = null;
+            if (location.length > 1) {
+                location2 = location[1];
+                for (int ii = 1; ii < location.length; ii++) {
+                    location2 = location2 + location[ii];
+                }
+            }
 
-                    //객체 생성
-                    StoreDTO storeDTO = StoreDTO.builder()
-                            .name(item.getMAIN_TITLE())
-                            .locationX(item.getLNG())
-                            .locationY(item.getLAT())
-                            .location1("부산광역시")
-                            .location2(location1)
-                            .location3(location2)
-                            .tasty(true)
-                            .call(item.getCNTCT_TEL())
+            //객체 생성
+            StoreDTO storeDTO = StoreDTO.builder()
+                    .name(item.getMAIN_TITLE())
+                    .locationX(item.getLNG())
+                    .locationY(item.getLAT())
+                    .location1("부산광역시")
+                    .location2(location1)
+                    .location3(location2)
+                    .tasty(true)
+                    .call(item.getCNTCT_TEL())
                     .UPK(1L)
                     .build();
 
@@ -279,25 +280,28 @@ public class StoreService {
 
     public void updateGoodPrice(int perPage, int page) throws IOException, URISyntaxException {
         String result = httpAPI.getGoodPriceStore(perPage, page);
-        GetGoodPriceStore data = gson.fromJson(result, GetGoodPriceStore.class);
+        ArrayList<GoodPriceDTO> data= gson.fromJson(result, GoodPriceRoot.class).getGoodPriceStore.body.items.item;
 
-        for (GoodPriceDTO i : data.body.items.item) {
+        for (GoodPriceDTO i : data) {
             String[] location = i.getAdres().split(" ");
-            if (location.length > 2) {
-                for (int j = 4; j < location.length-1; j++) {
-                    location[3] = location[3]+ " " + location[j];
+            if (location.length > 4) {
+                for (int j = 4; j < location.length - 1; j++) {
+                    location[3] = location[3] + " " + location[j];
                 }
             }
+            String[] newArr = Arrays.copyOf(location, location.length + 4);
 
             // 객체 변환
             StoreDTO object = StoreDTO.builder()
                     .name(i.getSj())
                     .category(i.getCn())
-                    .location1(location[1])
-                    .location2(location[2])
-                    .location3(location[3])
+                    .location1(newArr[1])
+                    .location2(newArr[2])
+                    .location3(newArr[3])
                     .call(i.getTel())
                     .image(i.getImgFile1())
+                    .UPK(1L)
+                    .price(true)
                     .build();
 
             // 저장 및 업데이트
@@ -309,8 +313,8 @@ public class StoreService {
         }
     }
 
-    public ArrayList<StoreDTO> fineOverAll(StoreDTO storeDTO){
-        ArrayList<StoreEntity> queried = storeRepository.findByCategoryAndLocation1AndLocation2AndKidsAndPriceAndTastyAndRoleModel( storeDTO.getCategory(), storeDTO.getLocation1(), storeDTO.getLocation2(), storeDTO.isKids(), storeDTO.isPrice(), storeDTO.isTasty(), storeDTO.isRoleModel());
+    public ArrayList<StoreDTO> fineOverAll(StoreDTO storeDTO) {
+        ArrayList<StoreEntity> queried = storeRepository.findByCategoryAndLocation1AndLocation2AndKidsAndPriceAndTastyAndRoleModel(storeDTO.getCategory(), storeDTO.getLocation1(), storeDTO.getLocation2(), storeDTO.isKids(), storeDTO.isPrice(), storeDTO.isTasty(), storeDTO.isRoleModel());
         ArrayList<StoreDTO> results = new ArrayList<>();
 
         if (queried != null) {
@@ -320,7 +324,6 @@ public class StoreService {
         }
         return results;
     }
-
 
 
     public StoreDTO toDTO(StoreEntity storeEntity) {

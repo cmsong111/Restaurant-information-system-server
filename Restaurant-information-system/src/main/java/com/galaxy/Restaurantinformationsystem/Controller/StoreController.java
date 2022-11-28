@@ -1,9 +1,7 @@
 package com.galaxy.Restaurantinformationsystem.Controller;
 
 import com.galaxy.Restaurantinformationsystem.DTO.StoreDTO;
-import com.galaxy.Restaurantinformationsystem.DataAPI.HttpAPI;
-import com.galaxy.Restaurantinformationsystem.DataAPI.StoreGoodPageDTO;
-import com.galaxy.Restaurantinformationsystem.DataAPI.StoreKidsPageDTO;
+import com.galaxy.Restaurantinformationsystem.DataAPI.*;
 import com.galaxy.Restaurantinformationsystem.Service.StoreService;
 import com.google.gson.Gson;
 import lombok.Builder;
@@ -122,8 +120,9 @@ public class StoreController {
     @PostMapping("/update-price")
     public String updatePrice() throws IOException, URISyntaxException {
 
+        String result = httpAPI.getGoodPriceStore(1,1);
         // Data count 구하기
-        int Totalcount = gson.fromJson(httpAPI.getGoodPriceStore(1, 1), StoreGoodPageDTO.class).getTotalCount();
+        int Totalcount = gson.fromJson(result, GoodPriceRoot.class).getGoodPriceStore.body.getTotalCount();
         int perPage = 500;
         int forCount = (Totalcount / perPage) + 1;
 

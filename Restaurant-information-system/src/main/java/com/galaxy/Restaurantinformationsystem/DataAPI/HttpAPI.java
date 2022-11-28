@@ -116,7 +116,7 @@ public class HttpAPI {
         //로그 남기기
         logger.info(httpget.getURI().toString());
         logger.info(StoreKidsServiceKey);
-        System.out.println(result);
+        //System.out.println(result);
         return result;
     }
 }
