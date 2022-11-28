@@ -39,12 +39,14 @@ public class StoreEntity {
     private boolean tasty;
     @Column(name = "role_model")
     private boolean roleModel;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.REMOVE)
     private List<ReviewEntity> reviews = new ArrayList<>();
-    @OneToMany
+    @OneToMany(cascade = CascadeType.REMOVE)
     private List<MenuEntity> menus = new ArrayList<>();
     @ManyToOne()
     @JoinColumn(name = "upk")
     @Nullable
     private UserEntity adminUser;
+    private String image;
+
 }

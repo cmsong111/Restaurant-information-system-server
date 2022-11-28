@@ -32,6 +32,7 @@ public class StoreDTO {
     private List<Long> reviews = new ArrayList<>();
     private List<Long> menus = new ArrayList<>();
     private Long UPK;
+    private String image;
 }
 
 

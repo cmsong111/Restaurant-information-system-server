@@ -41,7 +41,7 @@ public class StoreController {
 
     @PostMapping("/update")
     public StoreDTO updateUpdate(@RequestBody StoreDTO storeDTO) {
-        if (storeDTO.getUPK() != null) {
+        if (storeDTO.getSPK() != null) {
             return storeService.updateStoreDTO(storeDTO);
         } else {
             return null;
@@ -62,7 +62,7 @@ public class StoreController {
     }
 
     @GetMapping("/serch-category")
-    public ArrayList<StoreDTO> serchByCategory(@RequestBody String category, String location1, String location2) {
+    public ArrayList<StoreDTO> serchByCategory(@RequestParam String category, String location1, String location2) {
         ArrayList<StoreDTO> results = storeService.serchByCategoryAndLocation2(category, location1, location2);
         return results;
     }
@@ -76,7 +76,7 @@ public class StoreController {
     @ResponseBody
     @PostMapping("/delete")
     public String deleteStore(@RequestBody StoreDTO storeDTO) {
-        if (storeDTO.getUPK() == null) {
+        if (storeDTO.getSPK() == null) {
             return "failed";
         } else {
             storeService.deleteStore(storeDTO);

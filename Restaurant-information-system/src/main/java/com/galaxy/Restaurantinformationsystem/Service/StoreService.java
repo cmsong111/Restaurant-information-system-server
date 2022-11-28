@@ -79,7 +79,9 @@ public class StoreService {
         return results;
     }
 
+    @Transactional
     public StoreDTO updateStoreDTO(StoreDTO storeDTO) {
+        logger.info(storeDTO.toString());
 
         ArrayList<MenuEntity> menuEntities = new ArrayList<>();
         if (storeDTO.getMenus() != null) {
@@ -150,14 +152,18 @@ public class StoreService {
         if (!reviews.isEmpty()) {
             storeEntity.setReviews(reviews);
         }
+        if(storeDTO.getImage() != null){
+            storeEntity.setImage(storeEntity.getImage());
+        }
 
         return toDTO(storeRepository.save(storeEntity));
     }
 
 
+    @Transactional
     public void deleteStore(StoreDTO storeDTO) {
-        StoreEntity storeEntity = storeRepository.findById(storeDTO.getSPK()).get();
-        storeRepository.delete(storeEntity);
+        //StoreEntity storeEntity = storeRepository.findById(storeDTO.getSPK()).get();
+        storeRepository.deleteById(storeDTO.getSPK());
     }
 
     public ArrayList<StoreDTO> serchByNameAndLocation(String location1, String location2, String name) {
@@ -352,6 +358,7 @@ public class StoreService {
                 .UPK(storeEntity.getAdminUser().getUPK())
                 .menus(menuDTOs)
                 .reviews(reviewDTOS)
+                .image(storeEntity.getImage())
                 .build();
     }
 
@@ -389,6 +396,7 @@ public class StoreService {
                 .adminUser(userRepository.findById(storeDTO.getUPK()).get())
                 .reviews(reviewEntities)
                 .menus(menuEntities)
+                .image(storeDTO.getImage())
                 .build();
 
     }
