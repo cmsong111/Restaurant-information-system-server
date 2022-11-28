@@ -163,7 +163,6 @@ public class StoreService {
 
     @Transactional
     public void deleteStore(StoreDTO storeDTO) {
-        //StoreEntity storeEntity = storeRepository.findById(storeDTO.getSPK()).get();
         storeRepository.deleteById(storeDTO.getSPK());
     }
 

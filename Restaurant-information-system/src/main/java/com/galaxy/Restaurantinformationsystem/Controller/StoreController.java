@@ -138,7 +138,7 @@ public class StoreController {
 
     @ResponseBody
     @PostMapping("/serch-overwall")
-    public ArrayList<StoreDTO> serchOverwall(@RequestBody StoreDTO storeDTO){
+    public ArrayList<StoreDTO> serchOverwall(@RequestBody StoreDTO storeDTO) {
         return storeService.fineOverAll(storeDTO);
     }
 }
