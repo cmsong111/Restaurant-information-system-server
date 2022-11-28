@@ -120,7 +120,7 @@ public class StoreController {
 
     @ResponseBody
     @PostMapping("/update-price")
-    public String updatePrice(Object page) throws IOException, URISyntaxException {
+    public String updatePrice() throws IOException, URISyntaxException {
 
         // Data count 구하기
         int Totalcount = gson.fromJson(httpAPI.getGoodPriceStore(1, 1), StoreGoodPageDTO.class).getTotalCount();
@@ -131,7 +131,7 @@ public class StoreController {
         logger.info("for Count is : " + forCount);
 
         for (int Page = 1; Page < forCount + 1; Page++) {
-            storeService.updateGoodPrice(perPage, (Integer) page);
+            storeService.updateGoodPrice(perPage, Page);
         }
 
         return "update requested";

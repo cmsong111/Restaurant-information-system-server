@@ -279,24 +279,25 @@ public class StoreService {
 
     public void updateGoodPrice(int perPage, int page) throws IOException, URISyntaxException {
         String result = httpAPI.getGoodPriceStore(perPage, page);
-        ArrayList<StoreGoodDataDTO> data = gson.fromJson(result, StoreGoodPageDTO.class).getData();
+        GetGoodPriceStore data = gson.fromJson(result, GetGoodPriceStore.class);
 
-        for (StoreGoodDataDTO i : data) {
-            String[] location = i.get도로명주소().split(" ");
+        for (GoodPriceDTO i : data.body.items.item) {
+            String[] location = i.getAdres().split(" ");
             if (location.length > 2) {
-                for (int j = 3; j < location.length; j++) {
-                    location[2] = location[2] + location[j];
+                for (int j = 4; j < location.length-1; j++) {
+                    location[3] = location[3]+ " " + location[j];
                 }
             }
 
             // 객체 변환
             StoreDTO object = StoreDTO.builder()
-                    .name(i.get업소명())
-                    .category(i.get업소구문())
-                    .location1(location[0])
-                    .location2(location[1])
-                    .location3(location[2])
-                    .call(i.get전화번호())
+                    .name(i.getSj())
+                    .category(i.getCn())
+                    .location1(location[1])
+                    .location2(location[2])
+                    .location3(location[3])
+                    .call(i.getTel())
+                    .image(i.getImgFile1())
                     .build();
 
             // 저장 및 업데이트
