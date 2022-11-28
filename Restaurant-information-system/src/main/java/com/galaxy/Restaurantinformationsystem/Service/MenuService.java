@@ -6,6 +6,7 @@ import com.galaxy.Restaurantinformationsystem.Repository.MenuRepository;
 import com.galaxy.Restaurantinformationsystem.Repository.StoreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 
@@ -16,7 +17,7 @@ public class MenuService {
     StoreRepository storeRepository;
 
     @Autowired
-    public MenuService(MenuRepository MenuRepository,StoreRepository storeRepository) {
+    public MenuService(MenuRepository MenuRepository, StoreRepository storeRepository) {
         this.menuRepository = MenuRepository;
         this.storeRepository = storeRepository;
     }
@@ -51,7 +52,7 @@ public class MenuService {
         return toDTO(menuRepository.save(menuEntity));
     }
 
-
+    @Transactional
     public void deleteMenu(MenuDTO MenuDTO) {
         MenuEntity MenuEntity = toEntity(MenuDTO);
         menuRepository.delete(MenuEntity);
