@@ -9,6 +9,7 @@ import com.galaxy.Restaurantinformationsystem.Repository.StoreRepository;
 import com.galaxy.Restaurantinformationsystem.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 
@@ -21,7 +22,7 @@ public class ReviewService {
     StoreRepository storeRepository;
 
     @Autowired
-    public ReviewService(ReviewRepository reviewRepository, MenuRepository menuRepository, StoreRepository storeRepository,UserRepository userRepository) {
+    public ReviewService(ReviewRepository reviewRepository, MenuRepository menuRepository, StoreRepository storeRepository, UserRepository userRepository) {
         this.reviewRepository = reviewRepository;
         this.menuRepository = menuRepository;
         this.userRepository = userRepository;
@@ -33,13 +34,18 @@ public class ReviewService {
     }
 
     public ReviewDTO updateReview(ReviewDTO reviewDTO) {
-        return toDTO(reviewRepository.save(toEntity(reviewDTO)));
+        if (reviewDTO.getRPK() == null || reviewDTO.getUPK() == null || reviewDTO.getSPK() == null) {
+            return null;
+        } else {
+            return toDTO(reviewRepository.save(toEntity(reviewDTO)));
+        }
     }
 
     public ReviewDTO readReview(ReviewDTO reviewDTO) {
         return toDTO(reviewRepository.findById(reviewDTO.getRPK()).get());
     }
 
+    @Transactional
     public void deleteReview(ReviewDTO reviewDTO) {
         reviewRepository.delete(toEntity(reviewDTO));
     }
@@ -47,9 +53,10 @@ public class ReviewService {
     // 가게별 리뷰 읽어 오기
     public ArrayList<ReviewDTO> findByStore(StoreDTO storeDTO) {
         ArrayList<ReviewDTO> resultArray = new ArrayList<>();
-        if (storeDTO.getReviews() != null) {
-            for (Long RPK : storeDTO.getReviews()) {
-                resultArray.add(toDTO(reviewRepository.findById(RPK).get()));
+        ArrayList<ReviewEntity> queryList = reviewRepository.findByStore_SPK(storeDTO.getSPK());
+        if (queryList != null) {
+            for (ReviewEntity item : queryList) {
+                resultArray.add(toDTO(item));
             }
         }
         return resultArray;
