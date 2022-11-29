@@ -39,7 +39,14 @@ public class UserService {
     }
 
     public UserDTO deleteUser(UserDTO user) {
-        userRepository.delete(toEntity(user));
+        UserEntity userEntity = userRepository.findById(user.getUPK()).get();
+        if (userEntity.getStoreEntity() != null) {
+            for (StoreEntity store : userEntity.getStoreEntity()) {
+                store.setAdminUser(userRepository.findById(1L).get());
+                storeRepository.save(store);
+            }
+        }
+        userRepository.delete(userEntity);
         return null;
     }
 
