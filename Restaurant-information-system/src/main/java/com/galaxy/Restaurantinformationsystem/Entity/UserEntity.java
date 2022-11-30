@@ -1,6 +1,8 @@
 package com.galaxy.Restaurantinformationsystem.Entity;
 
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
@@ -26,12 +28,10 @@ public class UserEntity {
     private int age;
     @Column(name = "id_amdin")
     private boolean isAdmin;
-    @OneToMany
-    @JoinColumn(name = "upk")
+    @OneToMany(cascade=CascadeType.ALL, orphanRemoval=true)
     @Nullable
     private List<StoreEntity> storeEntity = new ArrayList<>();
-    @OneToMany
-    @JoinColumn(name = "rpk")
+    @OneToMany(cascade=CascadeType.ALL, orphanRemoval=true)
     @Nullable
     private List<ReviewEntity> reviewEntity = new ArrayList<>();
 }

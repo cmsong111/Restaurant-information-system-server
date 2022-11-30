@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.lang.management.MemoryUsage;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -142,8 +143,8 @@ public class StoreService {
         if (storeDTO.getLocationY() != 0) {
             storeEntity.setLocationY(storeEntity.getLocationY());
         }
-        if (storeDTO.getUPK() != 1L) {
-            storeEntity.setAdminUser(storeRepository.findById(storeDTO.getUPK()).get().getAdminUser());
+        if (storeDTO.getUPK() != null) {
+            storeEntity.setAdminUser(userRepository.findById(storeDTO.getUPK()).get());
         } else {
             storeDTO.setUPK(1L);
         }
@@ -163,8 +164,24 @@ public class StoreService {
 
     @Transactional
     public void deleteStore(StoreDTO storeDTO) {
-        storeRepository.deleteById(storeDTO.getSPK());
+        StoreEntity storeEntity = storeRepository.findById(storeDTO.getSPK()).get();
+        storeEntity.setAdminUser(null);
+        // 하위 메뉴 설정
+        // 메뉴 삭제
+        List<MenuEntity> menus = menuRepository.findByStore_SPK(storeDTO.getSPK());
+        if (menus != null) {
+            menuRepository.deleteAll(menus);
+        }
+        // 리뷰 삭제
+        List<ReviewEntity> reviews = reviewRepository.findByStore_SPK(storeDTO.getSPK());
+        if (reviews != null) {
+            reviewRepository.deleteAll(reviews);
+        }
+
+        storeEntity = storeRepository.save(storeEntity);
+        storeRepository.delete(storeEntity);
     }
+
 
     public ArrayList<StoreDTO> serchByNameAndLocation(String location1, String location2, String name) {
         ArrayList<StoreDTO> results = new ArrayList<>();
@@ -279,7 +296,7 @@ public class StoreService {
 
     public void updateGoodPrice(int perPage, int page) throws IOException, URISyntaxException {
         String result = httpAPI.getGoodPriceStore(perPage, page);
-        ArrayList<GoodPriceDTO> data= gson.fromJson(result, GoodPriceRoot.class).getGoodPriceStore.body.items.item;
+        ArrayList<GoodPriceDTO> data = gson.fromJson(result, GoodPriceRoot.class).getGoodPriceStore.body.items.item;
 
         for (GoodPriceDTO i : data) {
             String[] location = i.getAdres().split(" ");

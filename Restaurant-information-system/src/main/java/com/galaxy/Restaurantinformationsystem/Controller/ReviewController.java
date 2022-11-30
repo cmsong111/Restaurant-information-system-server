@@ -25,7 +25,7 @@ public class ReviewController {
         return reviewService.createReview(reviewDTO);
     }
 
-    @PostMapping("/udpate")
+    @PostMapping("/update")
     public ReviewDTO updateReview(@RequestBody ReviewDTO reviewDTO) {
         if (reviewDTO.getRPK() == null) {
             return null;

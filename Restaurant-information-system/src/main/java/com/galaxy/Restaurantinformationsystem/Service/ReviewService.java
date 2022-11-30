@@ -47,7 +47,12 @@ public class ReviewService {
 
     @Transactional
     public void deleteReview(ReviewDTO reviewDTO) {
-        reviewRepository.delete(toEntity(reviewDTO));
+        ReviewEntity reviewEntity = reviewRepository.findById(reviewDTO.getRPK()).get();
+        reviewEntity.setStoreEntity(null);
+        reviewEntity.setUserEntity(userRepository.findById(1L).get());
+        reviewEntity = reviewRepository.save(reviewEntity);
+
+        reviewRepository.delete(reviewEntity);
     }
 
     // 가게별 리뷰 읽어 오기
@@ -69,7 +74,7 @@ public class ReviewService {
                 .content(reviewDTO.getContent())
                 .image(reviewDTO.getImage())
                 .storeEntity(storeRepository.findById(reviewDTO.getSPK()).get())
-                .userEntity(userRepository.findById(reviewDTO.getRPK()).get())
+                .userEntity(userRepository.findById(reviewDTO.getUPK()).get())
                 .build();
     }
 

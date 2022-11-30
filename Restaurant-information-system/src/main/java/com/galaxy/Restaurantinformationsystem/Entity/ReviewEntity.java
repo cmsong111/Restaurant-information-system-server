@@ -1,18 +1,15 @@
 package com.galaxy.Restaurantinformationsystem.Entity;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
-@Entity
-@Getter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Entity
 @Table(name = "review")
 public class ReviewEntity {
     @Id
@@ -22,8 +19,8 @@ public class ReviewEntity {
     private String title;
     private String content;
     private String image;
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne
     private StoreEntity storeEntity;
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne
     private UserEntity userEntity;
 }

@@ -46,26 +46,26 @@ public class StoreController {
         }
     }
 
-    @GetMapping("/serch-location")
+    @GetMapping("/search-location")
     public ArrayList<StoreDTO> serchBylocation(@RequestParam String location1, String location2) {
         //StoreDTO storeDTO = StoreDTO.builder().location1(location1).location2(location2).build();
         ArrayList<StoreDTO> results = storeService.searchByLocationArray(location1, location2);
         return results;
     }
 
-    @GetMapping("/serch-name")
-    public ArrayList<StoreDTO> serchByName(@RequestParam String location1, String location2, String name) {
+    @GetMapping("/search-name")
+    public ArrayList<StoreDTO> searchByName(@RequestParam String location1, String location2, String name) {
         ArrayList<StoreDTO> results = storeService.serchByNameAndLocation(location1, location2, name);
         return results;
     }
 
-    @GetMapping("/serch-category")
-    public ArrayList<StoreDTO> serchByCategory(@RequestParam String category, String location1, String location2) {
+    @GetMapping("/search-category")
+    public ArrayList<StoreDTO> searchByCategory(@RequestParam String category, String location1, String location2) {
         ArrayList<StoreDTO> results = storeService.serchByCategoryAndLocation2(category, location1, location2);
         return results;
     }
 
-    @GetMapping("/serch-id")
+    @GetMapping("/search-id")
     public Optional<StoreDTO> searchBySPK(@RequestParam long id) {
         return storeService.serchById(id);
     }

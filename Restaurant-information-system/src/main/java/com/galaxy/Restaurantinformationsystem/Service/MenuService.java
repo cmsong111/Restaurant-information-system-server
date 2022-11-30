@@ -46,8 +46,8 @@ public class MenuService {
         MenuEntity menuEntity = menuRepository.getReferenceById(menuDTO.getMPK());
         menuEntity.setName(menuDTO.getName());
         menuEntity.setStore(storeRepository.findById(menuDTO.getSPK()).get());
-        menuEntity.setImage(menuEntity.getImage());
-        menuEntity.setPrice(menuEntity.getPrice());
+        menuEntity.setImage(menuDTO.getImage());
+        menuEntity.setPrice(menuDTO.getPrice());
 
         return toDTO(menuRepository.save(menuEntity));
     }

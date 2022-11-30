@@ -19,7 +19,9 @@ public interface StoreRepository extends JpaRepository<StoreEntity, Long> {
 
     ArrayList<StoreEntity> findByCategoryAndLocation1AndLocation2AndKidsAndPriceAndTastyAndRoleModel( String category, String location1, String location2, boolean kids, boolean price, boolean tasty, boolean roleModel);
 
-    //ArrayList<StoreEntity> findAllByNameContainsAndLocation1AAndLocation2AndCategoryAndKidsAndPriceAndRoleModelOrderByTasty(String name, String locaion1, String locaiont2, String category, boolean kids, boolean price, boolean Rolemodel, boolean Tasty);
+    List<StoreEntity> findByAdminUser_UPK(Long UPK);
+
+
 }
 
 

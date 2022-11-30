@@ -39,11 +39,11 @@ public class StoreEntity {
     private boolean tasty;
     @Column(name = "role_model")
     private boolean roleModel;
-    @OneToMany(cascade = CascadeType.REMOVE)
+    @OneToMany(cascade=CascadeType.ALL, orphanRemoval=true)
     private List<ReviewEntity> reviews = new ArrayList<>();
-    @OneToMany(cascade = CascadeType.REMOVE)
+    @OneToMany(cascade=CascadeType.ALL, orphanRemoval=true)
     private List<MenuEntity> menus = new ArrayList<>();
-    @ManyToOne()
+    @ManyToOne
     @JoinColumn(name = "upk")
     @Nullable
     private UserEntity adminUser;
