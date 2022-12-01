@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -80,6 +81,10 @@ public class StoreController {
             storeService.deleteStore(storeDTO);
             return "requested";
         }
+    }
+    @GetMapping("/searchByUPK")
+    public List<StoreDTO> searchByUPK(@RequestParam long id) {
+        return storeService.searchBySPK(id);
     }
 
     @ResponseBody

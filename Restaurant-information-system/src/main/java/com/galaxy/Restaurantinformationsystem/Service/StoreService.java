@@ -204,6 +204,16 @@ public class StoreService {
         }
         return results;
     }
+    public List<StoreDTO> searchBySPK(Long spk) {
+        List<StoreDTO> results = new ArrayList<>();
+        List<StoreEntity> queried = storeRepository.findByAdminUser_UPK(spk);
+        if (queried != null) {
+            for (StoreEntity item : queried) {
+                results.add(toDTO(item));
+            }
+        }
+        return results;
+    }
 
 
     public boolean storeDuplicationCheck(StoreDTO storeDTO) {
