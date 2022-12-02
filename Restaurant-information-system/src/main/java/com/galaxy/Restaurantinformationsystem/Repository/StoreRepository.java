@@ -2,10 +2,12 @@ package com.galaxy.Restaurantinformationsystem.Repository;
 
 import com.galaxy.Restaurantinformationsystem.Entity.StoreEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Repository
 public interface StoreRepository extends JpaRepository<StoreEntity, Long> {
     List<StoreEntity> findByLocation1AndLocation2(String location1, String location2);
 

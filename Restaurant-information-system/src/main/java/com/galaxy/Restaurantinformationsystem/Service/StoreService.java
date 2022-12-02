@@ -20,10 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.lang.management.MemoryUsage;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Transactional(readOnly = true)
@@ -67,18 +64,15 @@ public class StoreService {
     }
 
 
-    public ArrayList<StoreDTO> searchByLocationArray(String location1, String location2) {
-        ArrayList<StoreDTO> results = new ArrayList<>();
+    public StoreDTO searchByLocationArray(String location1, String location2) {
+        StoreDTO results;
 
         List<StoreEntity> storeEntityArrayList = storeRepository.findByLocation1AndLocation2(location1, location2);
 
         if (storeEntityArrayList != null) {
-            for (StoreEntity storeEntity : storeEntityArrayList) {
-                logger.info("store:" + storeEntity.toString());
-                results.add(toDTO(storeEntity));
-            }
+            Collections.shuffle(storeEntityArrayList);
         }
-        return results;
+        return toDTO(storeEntityArrayList.get(0));
     }
 
     @Transactional
@@ -204,6 +198,7 @@ public class StoreService {
         }
         return results;
     }
+
     public List<StoreDTO> searchBySPK(Long spk) {
         List<StoreDTO> results = new ArrayList<>();
         List<StoreEntity> queried = storeRepository.findByAdminUser_UPK(spk);
@@ -327,6 +322,7 @@ public class StoreService {
                     .call(i.getTel())
                     .image(i.getImgFile1())
                     .UPK(1L)
+                    .SPK(1L)
                     .price(true)
                     .build();
 
