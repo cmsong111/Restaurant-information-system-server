@@ -36,3 +36,10 @@ logging:
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
+
+
+security:
+  jwt:
+    token:
+      secret-key: this-is-secret-key-for-jwt-token-signing-and-verification-please-change-it
+      expire-length: 86400000

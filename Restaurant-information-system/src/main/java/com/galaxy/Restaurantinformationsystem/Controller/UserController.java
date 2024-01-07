@@ -1,57 +1,67 @@
 package com.galaxy.Restaurantinformationsystem.Controller;
 
 
-import com.galaxy.Restaurantinformationsystem.DTO.UserDTO;
+import com.galaxy.Restaurantinformationsystem.DTO.UserInfoDto;
+import com.galaxy.Restaurantinformationsystem.DTO.UserRegisterFormDto;
 import com.galaxy.Restaurantinformationsystem.Service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.galaxy.Restaurantinformationsystem.config.JwtTokenProvider;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/user")
-
+@AllArgsConstructor
 public class UserController {
 
     private UserService userService;
+    private JwtTokenProvider jwtTokenProvider;
 
-    @Autowired
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
-
-    // 회원가입
-    @PostMapping("/create")
-    public UserDTO userCreate(@RequestBody UserDTO userDTO) {
-        return userService.createUser(userDTO);
+    @PostMapping("/register")
+    @Operation(summary = "회원가입", description = "회원가입")
+    public UserInfoDto registerUser(@RequestBody UserRegisterFormDto userDTO) {
+        return userService.registerUser(userDTO);
     }
 
     // 회원 정보 읽기
     @PostMapping("/login")
-    public UserDTO userLogin(@RequestBody UserDTO userDTO) {
-        if (userDTO.getEmail() == null && userDTO.getPassword() == null) {
-            return null;
-        }
-        return userService.loginUser(userDTO.getEmail(), userDTO.getPassword());
+    @Operation(summary = "로그인", description = "로그인")
+    public ResponseEntity<String> userLogin(@Parameter(description = "이메일") @RequestParam(value = "email", required = true) String email, @Parameter(description = "비밀번호") @RequestParam(value = "password", required = true) String password) {
+        String token = userService.login(email, password);
+        return ResponseEntity.ok(token);
     }
 
-    //회원 업데이트
+
     @PostMapping("/update")
-    public UserDTO userUpdate(@RequestBody UserDTO userDTO) {
-        userDTO = userService.updateUser(userDTO);
+    @PreAuthorize("isAuthenticated()")
+    @Operation(summary = "회원 정보 수정", description = "회원 정보 수정")
+    public UserInfoDto userUpdate(@RequestBody UserInfoDto userDTO, HttpServletRequest req) {
+        userDTO = userService.updateUser(userDTO, jwtTokenProvider.getUid(req));
 
         return userDTO;
     }
 
-    //삭제
+
     @PostMapping("/delete")
-    public String userDelete(@RequestBody UserDTO user) {
-        userService.deleteUser(user);
+    @PreAuthorize("isAuthenticated()")
+    @Operation(summary = "회원 탈퇴", description = "회원 탈퇴")
+    public String userDelete(HttpServletRequest req) {
+        userService.deleteUser(jwtTokenProvider.getUid(req));
         return "Delete Done";
     }
 
+    @GetMapping("/whoami")
+    @Operation(summary = "회원 정보 읽기", description = "회원 정보 읽기")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<UserInfoDto> whoami(HttpServletRequest req) {
+        Optional<UserInfoDto> userDTO = userService.searchById(jwtTokenProvider.getUid(req));
+        return userDTO.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
 }
+

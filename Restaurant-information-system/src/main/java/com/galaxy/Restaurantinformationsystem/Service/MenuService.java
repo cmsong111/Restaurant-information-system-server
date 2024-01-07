@@ -47,7 +47,7 @@ public class MenuService {
         menuEntity.setName(menuDTO.getName());
         menuEntity.setStore(storeRepository.findById(menuDTO.getSPK()).get());
         menuEntity.setImage(menuDTO.getImage());
-        menuEntity.setPrice(menuDTO.getPrice());
+        menuEntity.setPrice((long) menuDTO.getPrice());
 
         return toDTO(menuRepository.save(menuEntity));
     }
@@ -60,9 +60,9 @@ public class MenuService {
 
     public MenuEntity toEntity(MenuDTO menuDTO) {
         return MenuEntity.builder()
-                .MPK(menuDTO.getMPK())
+                .id(menuDTO.getMPK())
                 .name(menuDTO.getName())
-                .price(menuDTO.getPrice())
+                .price((long) menuDTO.getPrice())
                 .image(menuDTO.getImage())
                 .store(storeRepository.findById(menuDTO.getSPK()).get())
                 .build();
@@ -70,11 +70,11 @@ public class MenuService {
 
     public MenuDTO toDTO(MenuEntity menuEntity) {
         return MenuDTO.builder()
-                .MPK(menuEntity.getMPK())
+                .MPK(menuEntity.getId())
                 .name(menuEntity.getName())
                 .price(menuEntity.getPrice())
                 .image(menuEntity.getImage())
-                .SPK(menuEntity.getStore().getSPK())
+                .SPK(menuEntity.getStore().getId())
                 .build();
     }
 }

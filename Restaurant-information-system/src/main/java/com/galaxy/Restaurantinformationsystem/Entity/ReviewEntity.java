@@ -2,23 +2,23 @@ package com.galaxy.Restaurantinformationsystem.Entity;
 
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
+@Entity
+@Getter
+@Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Entity
 public class ReviewEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long RPK;
+    private Long id;
     private String title;
     private String content;
     private String image;
+    private int score;
     @ManyToOne
     private StoreEntity storeEntity;
     @ManyToOne

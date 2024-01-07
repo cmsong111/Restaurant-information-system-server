@@ -10,7 +10,7 @@ import lombok.*;
 public class MenuDTO {
     private Long MPK;
     private String name;
-    private int price;
+    private Long price;
     private String image;
     private Long SPK;
 }

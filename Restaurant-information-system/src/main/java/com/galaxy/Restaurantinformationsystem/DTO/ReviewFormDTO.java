@@ -1,18 +1,15 @@
 package com.galaxy.Restaurantinformationsystem.DTO;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Data;
+import lombok.ToString;
 
-@Builder
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
+@Builder
 @ToString
-public class ReviewDTO {
-    private Long id;
+public class ReviewFormDTO {
     private String title;
     private String content;
     private String image;
     private int score;
-    private Long storeEntityId;
-    private Long userEntityId;
 }

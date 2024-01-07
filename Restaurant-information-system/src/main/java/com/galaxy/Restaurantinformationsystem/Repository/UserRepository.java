@@ -7,7 +7,13 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, Long> {
-    @Query("SELECT u FROM UserEntity u WHERE u.ID = ?1 and u.password = ?2 ")
+    @Query("SELECT u FROM UserEntity u WHERE u.id = ?1 and u.password = ?2 ")
     UserEntity readbylogin(String userID, String userPW);
+
+    UserEntity findByEmail(String email);
+
+    boolean existsByEmail(String email);
+
+
 }
 

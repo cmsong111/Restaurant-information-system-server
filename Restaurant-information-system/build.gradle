@@ -31,7 +31,9 @@ dependencies {
 	implementation 'org.modelmapper:modelmapper:3.2.0'
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
 
-
+	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+	implementation 'io.jsonwebtoken:jjwt-impl:0.11.5'
+	implementation 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 
 	// TODO: Remove 예정
 	implementation 'com.google.code.gson:gson:2.10.1'

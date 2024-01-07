@@ -1,119 +1,82 @@
 package com.galaxy.Restaurantinformationsystem.Service;
 
-import com.galaxy.Restaurantinformationsystem.DTO.UserDTO;
-import com.galaxy.Restaurantinformationsystem.Entity.ReviewEntity;
-import com.galaxy.Restaurantinformationsystem.Entity.StoreEntity;
+import com.galaxy.Restaurantinformationsystem.DTO.UserInfoDto;
+import com.galaxy.Restaurantinformationsystem.DTO.UserRegisterFormDto;
 import com.galaxy.Restaurantinformationsystem.Entity.UserEntity;
 import com.galaxy.Restaurantinformationsystem.Repository.ReviewRepository;
 import com.galaxy.Restaurantinformationsystem.Repository.StoreRepository;
 import com.galaxy.Restaurantinformationsystem.Repository.UserRepository;
+import com.galaxy.Restaurantinformationsystem.common.UserRole;
+import com.galaxy.Restaurantinformationsystem.config.JwtTokenProvider;
+import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Optional;
 
 
 @Service
+@AllArgsConstructor
 public class UserService {
     UserRepository userRepository;
     StoreRepository storeRepository;
     ReviewRepository reviewRepository;
-
-    public UserService(UserRepository userRepository, StoreRepository storeRepository, ReviewRepository reviewRepository) {
-        this.userRepository = userRepository;
-        this.storeRepository = storeRepository;
-        this.reviewRepository = reviewRepository;
-    }
+    ModelMapper modelMapper;
+    PasswordEncoder passwordEncoder;
+    JwtTokenProvider jwtTokenProvider;
 
 
-    public UserDTO createUser(UserDTO user) {
-        UserEntity userEntity = toEntity(user);
-        return toDTO(userRepository.save(userEntity));
-    }
-
-
-    public UserDTO loginUser(String id, String password) {
-        UserEntity userEntity = userRepository.readbylogin(id, password);
-        System.out.println(userEntity.toString());
-        return toDTO(userEntity);
-    }
-
-    public UserDTO deleteUser(UserDTO user) {
-        UserEntity userEntity = userRepository.findById(user.getId()).get();
-
-        // 자기 가게 삭제
-        List<StoreEntity> stores = storeRepository.findByAdminUser_UPK(user.getId());
-        if (stores!= null) {
-            for (StoreEntity store : stores) {
-                storeRepository.delete(store);
-            }
+    public UserInfoDto registerUser(UserRegisterFormDto userRegisterFormDto) {
+        if (userRepository.existsByEmail(userRegisterFormDto.getEmail())) {
+            throw new RuntimeException("이미 가입되어 있는 유저입니다.");
         }
-        // 본인이 작성한 리뷰 삭제
-        List<ReviewEntity> reivews = reviewRepository.findByUserEntity_UPK(user.getId());
-        if (reivews != null){
-            for (ReviewEntity review : reivews) {
-                reviewRepository.delete(review);
-            }
+        userRegisterFormDto.setPassword(passwordEncoder.encode(userRegisterFormDto.getPassword()));
+        UserEntity userEntity = modelMapper.map(userRegisterFormDto, UserEntity.class);
+        userEntity.setRole(UserRole.USER);
+
+        return modelMapper.map(userRepository.save(userEntity), UserInfoDto.class);
+    }
+
+
+    public String login(String email, String password) {
+        UserEntity userEntity = userRepository.findByEmail(email);
+        if (userEntity == null) {
+            throw new RuntimeException("가입되지 않은 유저입니다.");
         }
+        if (!passwordEncoder.matches(password, userEntity.getPassword())) {
+            throw new RuntimeException("비밀번호가 일치하지 않습니다.");
+        }
+        return jwtTokenProvider.createToken(userEntity, userEntity.getRole());
+    }
+
+    public String deleteUser(Long id) {
+        UserEntity userEntity = userRepository.findById(id).orElseThrow(() -> new RuntimeException("존재하지 않는 유저입니다."));
+        reviewRepository.deleteByUserEntity(userEntity);
 
         userRepository.delete(userEntity);
         return null;
     }
 
-    public UserDTO updateUser(UserDTO user) {
-        return toDTO(userRepository.save(toEntity(user)));
+    public UserInfoDto updateUser(UserInfoDto userDTO, Long id) {
+        if (!userRepository.existsById(id)) {
+            throw new RuntimeException("존재하지 않는 유저입니다.");
+        }
+
+        if (userDTO.getId() != id) {
+            throw new RuntimeException("본인의 정보만 수정할 수 있습니다.");
+        }
+
+        if (userDTO.getPassword() != null) {
+            userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        }
+
+
+        return modelMapper.map(userRepository.save(modelMapper.map(userDTO, UserEntity.class)), UserInfoDto.class);
     }
 
-    public UserDTO toDTO(UserEntity userEntity) {
-
-        List<Long> storeDTOArrayList = new ArrayList<>();
-        if (userEntity.getStoreEntity() != null) {
-            for (StoreEntity store : userEntity.getStoreEntity()) {
-                storeDTOArrayList.add(store.getSPK());
-            }
-        }
-        List<Long> reviewDTOs = new ArrayList<>();
-        if (userEntity.getReviewEntity() != null) {
-            for (ReviewEntity review : userEntity.getReviewEntity()) {
-                reviewDTOs.add(review.getRPK());
-            }
-        }
-        return UserDTO.builder()
-                .UPK(userEntity.getUPK())
-                .ID(userEntity.getID())
-                .password(userEntity.getPassword())
-                .name(userEntity.getName())
-                .age(userEntity.getAge())
-                .isAdmin(userEntity.isAdmin())
-                .SPK(storeDTOArrayList)
-                .RPK(reviewDTOs)
-                .build();
+    public Optional<UserInfoDto> searchById(Long id) {
+        return userRepository.findById(id).map(userEntity -> modelMapper.map(userEntity, UserInfoDto.class));
     }
 
-    public UserEntity toEntity(UserDTO userDTO) {
-
-        List<StoreEntity> storeEntityList = new ArrayList<>();
-        if (userDTO.getSPK() != null) {
-            for (Long SPK : userDTO.getSPK()) {
-                storeEntityList.add(storeRepository.findById(SPK).get());
-
-            }
-        }
-        List<ReviewEntity> ReviewEntities = new ArrayList<>();
-        if (userDTO.getRPK() != null) {
-            for (Long RPK : userDTO.getRPK()) {
-                ReviewEntities.add(reviewRepository.findById(RPK).get());
-            }
-        }
-        return UserEntity.builder()
-                .UPK(userDTO.getUPK())
-                .ID(userDTO.getID())
-                .name(userDTO.getName())
-                .password(userDTO.getPassword())
-                .age(userDTO.getAge())
-                .isAdmin(userDTO.isAdmin())
-                .storeEntity(storeEntityList)
-                .reviewEntity(ReviewEntities)
-                .build();
-    }
 }

@@ -1,25 +1,26 @@
 package com.galaxy.Restaurantinformationsystem.Entity;
 
+import com.galaxy.Restaurantinformationsystem.common.UserRole;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "user")
+@Table(name = "users")
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(unique = true)
+
     private String email;
     private String password;
     private String name;
-    private int age;
-    private boolean isAdmin;
+
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
 }

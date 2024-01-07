@@ -17,7 +17,7 @@ public class MenuEntity {
     private String name;
     private Long price;
     private String image;
+
     @ManyToOne
-    @JoinColumn
     private StoreEntity store;
 }

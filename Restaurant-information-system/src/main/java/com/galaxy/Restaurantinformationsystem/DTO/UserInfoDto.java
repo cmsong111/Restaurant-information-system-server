@@ -1,5 +1,6 @@
 package com.galaxy.Restaurantinformationsystem.DTO;
 
+import com.galaxy.Restaurantinformationsystem.common.UserRole;
 import lombok.*;
 
 @Data
@@ -7,11 +8,10 @@ import lombok.*;
 @NoArgsConstructor
 @ToString
 @Builder
-public class UserDTO {
+public class UserInfoDto {
     private long id;
     private String email;
     private String password;
     private String name;
-    private int age;
-    private boolean isAdmin;
+    private UserRole role;
 }
