@@ -39,17 +39,17 @@ public class UserService {
     }
 
     public UserDTO deleteUser(UserDTO user) {
-        UserEntity userEntity = userRepository.findById(user.getUPK()).get();
+        UserEntity userEntity = userRepository.findById(user.getId()).get();
 
         // 자기 가게 삭제
-        List<StoreEntity> stores = storeRepository.findByAdminUser_UPK(user.getUPK());
+        List<StoreEntity> stores = storeRepository.findByAdminUser_UPK(user.getId());
         if (stores!= null) {
             for (StoreEntity store : stores) {
                 storeRepository.delete(store);
             }
         }
         // 본인이 작성한 리뷰 삭제
-        List<ReviewEntity> reivews = reviewRepository.findByUserEntity_UPK(user.getUPK());
+        List<ReviewEntity> reivews = reviewRepository.findByUserEntity_UPK(user.getId());
         if (reivews != null){
             for (ReviewEntity review : reivews) {
                 reviewRepository.delete(review);

@@ -33,10 +33,10 @@ public class UserController {
     // 회원 정보 읽기
     @PostMapping("/login")
     public UserDTO userLogin(@RequestBody UserDTO userDTO) {
-        if (userDTO.getID() == null && userDTO.getPassword() == null) {
+        if (userDTO.getEmail() == null && userDTO.getPassword() == null) {
             return null;
         }
-        return userService.loginUser(userDTO.getID(), userDTO.getPassword());
+        return userService.loginUser(userDTO.getEmail(), userDTO.getPassword());
     }
 
     //회원 업데이트
@@ -54,17 +54,4 @@ public class UserController {
         return "Delete Done";
     }
 
-
-    private String sha256(String password) {
-        try {
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-            md.update(password.getBytes());
-            byte[] bytes = md.digest();
-            return bytes.toString();
-
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
 }

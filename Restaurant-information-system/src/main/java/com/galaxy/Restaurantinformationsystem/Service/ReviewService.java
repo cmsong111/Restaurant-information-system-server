@@ -7,6 +7,7 @@ import com.galaxy.Restaurantinformationsystem.Repository.MenuRepository;
 import com.galaxy.Restaurantinformationsystem.Repository.ReviewRepository;
 import com.galaxy.Restaurantinformationsystem.Repository.StoreRepository;
 import com.galaxy.Restaurantinformationsystem.Repository.UserRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 
 @Service
+@AllArgsConstructor
 public class ReviewService {
 
     ReviewRepository reviewRepository;
@@ -21,13 +23,6 @@ public class ReviewService {
     UserRepository userRepository;
     StoreRepository storeRepository;
 
-    @Autowired
-    public ReviewService(ReviewRepository reviewRepository, MenuRepository menuRepository, StoreRepository storeRepository, UserRepository userRepository) {
-        this.reviewRepository = reviewRepository;
-        this.menuRepository = menuRepository;
-        this.userRepository = userRepository;
-        this.storeRepository = storeRepository;
-    }
 
     public ReviewDTO createReview(ReviewDTO reviewDTO) {
         return toDTO(reviewRepository.save(toEntity(reviewDTO)));
@@ -84,7 +79,7 @@ public class ReviewService {
                 .title(reviewEntity.getTitle())
                 .content(reviewEntity.getContent())
                 .image(reviewEntity.getImage())
-                .UPK(reviewEntity.getUserEntity().getUPK())
+                .UPK(reviewEntity.getUserEntity().getId())
                 .SPK(reviewEntity.getStoreEntity().getSPK())
                 .build();
     }

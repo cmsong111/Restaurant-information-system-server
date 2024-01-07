@@ -1,7 +1,7 @@
 package com.galaxy.Restaurantinformationsystem.Service;
 
 import com.galaxy.Restaurantinformationsystem.DTO.StoreDTO;
-import com.galaxy.Restaurantinformationsystem.DataAPI.*;
+
 import com.galaxy.Restaurantinformationsystem.Entity.MenuEntity;
 import com.galaxy.Restaurantinformationsystem.Entity.ReviewEntity;
 import com.galaxy.Restaurantinformationsystem.Entity.StoreEntity;
@@ -10,19 +10,16 @@ import com.galaxy.Restaurantinformationsystem.Repository.ReviewRepository;
 import com.galaxy.Restaurantinformationsystem.Repository.StoreRepository;
 import com.galaxy.Restaurantinformationsystem.Repository.UserRepository;
 import com.google.gson.Gson;
-import org.hibernate.cache.spi.support.AbstractReadWriteAccess;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.lang.management.MemoryUsage;
 import java.net.URISyntaxException;
 import java.util.*;
 
 @Service
+@Slf4j
 @Transactional(readOnly = true)
 public class StoreService {
 
@@ -31,18 +28,7 @@ public class StoreService {
     UserRepository userRepository;
     MenuRepository menuRepository;
     ReviewRepository reviewRepository;
-    HttpAPI httpAPI;
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
-    @Autowired
-    public StoreService(StoreRepository storeRepository, MenuRepository menuRepository, HttpAPI httpAPI, ReviewRepository reviewRepository, UserRepository userRepository) {
-        this.storeRepository = storeRepository;
-        this.menuRepository = menuRepository;
-        this.userRepository = userRepository;
-        this.reviewRepository = reviewRepository;
-        this.httpAPI = httpAPI;
-    }
 
 
     public StoreDTO createStoreDTO(StoreDTO storeDTO) {
@@ -77,7 +63,7 @@ public class StoreService {
 
     @Transactional
     public StoreDTO updateStoreDTO(StoreDTO storeDTO) {
-        logger.info(storeDTO.toString());
+        log.info(storeDTO.toString());
 
         ArrayList<MenuEntity> menuEntities = new ArrayList<>();
         if (storeDTO.getMenus() != null) {
@@ -220,120 +206,7 @@ public class StoreService {
         }
     }
 
-    public void updateKids(int perPage, int page) throws IOException, URISyntaxException {
 
-        String response = httpAPI.getKidsStore(perPage, page);
-        // 객체 변환
-        ArrayList<StoreKidDataDTO> data = gson.fromJson(response, StoreKidsPageDTO.class).getData();
-
-
-        for (StoreKidDataDTO i : data) {
-            String[] location = i.get도로명주소().split(" ");
-            if (location.length > 2) {
-                for (int lo = 3; lo < location.length; lo++) {
-                    location[2] = location[2] + location[lo];
-                }
-            }
-            // 객체 변환
-            StoreDTO object = StoreDTO.builder()
-                    .kids(true)
-                    .name(i.get가맹점명칭())
-                    .call(i.get전화번호())
-                    .UPK(1L)
-                    .locationY(Double.valueOf(i.get위도()))
-                    .locationX(Double.valueOf(i.get경도()))
-                    .location1(location[0])
-                    .location2(location[1])
-                    .location3(location[2])
-                    .category(i.get업종())
-                    .reviews(null)
-                    .build();
-            // 저장 및 업데이트
-            if (storeDuplicationCheck(object)) {
-                this.createStoreDTO(object);
-            } else {
-                Long spk = storeRepository.findByNameAndLocation2(object.getName(), object.getLocation2()).getSPK();
-                object.setSPK(spk);
-                this.updateStoreDTO(object);
-            }
-        }
-    }
-
-    public void updateTasty(int perPage, int page) throws IOException, URISyntaxException {
-        String result = httpAPI.getTastyStore(perPage, page);
-        ArrayList<StoreTastyItem> data = gson.fromJson(result, StoreTastyPage.class).getFoodKr.item;
-
-        for (StoreTastyItem item : data) {
-            // 주소 파싱
-            String[] location = item.getADDR1().split(" ");
-            String location1 = location[0];
-            String location2 = null;
-            if (location.length > 1) {
-                location2 = location[1];
-                for (int ii = 1; ii < location.length; ii++) {
-                    location2 = location2 + location[ii];
-                }
-            }
-
-            //객체 생성
-            StoreDTO storeDTO = StoreDTO.builder()
-                    .name(item.getMAIN_TITLE())
-                    .locationX(item.getLNG())
-                    .locationY(item.getLAT())
-                    .location1("부산광역시")
-                    .location2(location1)
-                    .location3(location2)
-                    .tasty(true)
-                    .call(item.getCNTCT_TEL())
-                    .UPK(1L)
-                    .build();
-
-            // 저장 및 업데이트
-            if (storeDuplicationCheck(storeDTO)) {
-                this.createStoreDTO(storeDTO);
-            } else {
-                Long spk = storeRepository.findByNameAndLocation2(storeDTO.getName(), storeDTO.getLocation2()).getSPK();
-                storeDTO.setSPK(spk);
-                this.updateStoreDTO(storeDTO);
-            }
-        }
-    }
-
-    public void updateGoodPrice(int perPage, int page) throws IOException, URISyntaxException {
-        String result = httpAPI.getGoodPriceStore(perPage, page);
-        ArrayList<GoodPriceDTO> data = gson.fromJson(result, GoodPriceRoot.class).getGoodPriceStore.body.items.item;
-
-        for (GoodPriceDTO i : data) {
-            String[] location = i.getAdres().split(" ");
-            if (location.length > 4) {
-                for (int j = 4; j < location.length - 1; j++) {
-                    location[3] = location[3] + " " + location[j];
-                }
-            }
-            String[] newArr = Arrays.copyOf(location, location.length + 4);
-
-            // 객체 변환
-            StoreDTO object = StoreDTO.builder()
-                    .name(i.getSj())
-                    .category(i.getCn())
-                    .location1(newArr[1])
-                    .location2(newArr[2])
-                    .location3(newArr[3])
-                    .call(i.getTel())
-                    .image(i.getImgFile1())
-                    .UPK(1L)
-                    .SPK(1L)
-                    .price(true)
-                    .build();
-
-            // 저장 및 업데이트
-            if (storeDuplicationCheck(object)) {
-                this.createStoreDTO(object);
-            } else {
-                this.updateStoreDTO(object);
-            }
-        }
-    }
 
     public ArrayList<StoreDTO> fineOverAll(StoreDTO storeDTO) {
         ArrayList<StoreEntity> queried = storeRepository.findByCategoryAndLocation1AndLocation2AndKidsAndPriceAndTastyAndRoleModel(storeDTO.getCategory(), storeDTO.getLocation1(), storeDTO.getLocation2(), storeDTO.isKids(), storeDTO.isPrice(), storeDTO.isTasty(), storeDTO.isRoleModel());
@@ -381,7 +254,7 @@ public class StoreService {
                 .roleModel(storeEntity.isRoleModel())
                 .locationX(storeEntity.getLocationX())
                 .locationY(storeEntity.getLocationY())
-                .UPK(storeEntity.getAdminUser().getUPK())
+                .UPK(storeEntity.getAdminUser().getId())
                 .menus(menuDTOs)
                 .reviews(reviewDTOS)
                 .image(storeEntity.getImage())

@@ -1,6 +1,5 @@
 package com.galaxy.Restaurantinformationsystem.Repository;
 
-import com.galaxy.Restaurantinformationsystem.Entity.MenuEntity;
 import com.galaxy.Restaurantinformationsystem.Entity.ReviewEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

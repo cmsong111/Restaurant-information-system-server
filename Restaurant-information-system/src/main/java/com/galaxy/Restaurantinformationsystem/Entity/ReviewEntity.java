@@ -1,20 +1,20 @@
 package com.galaxy.Restaurantinformationsystem.Entity;
 
 
-import lombok.*;
-
-import javax.persistence.*;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "review")
 public class ReviewEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "rpk")
     private Long RPK;
     private String title;
     private String content;

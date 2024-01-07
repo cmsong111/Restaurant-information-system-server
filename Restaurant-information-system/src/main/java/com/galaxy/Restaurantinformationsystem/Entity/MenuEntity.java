@@ -1,27 +1,23 @@
 package com.galaxy.Restaurantinformationsystem.Entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
+import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
-@Data
+@Getter
+@Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "menu")
 public class MenuEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "mpk")
-    private Long MPK;
+    private Long id;
     private String name;
-    private int price;
+    private Long price;
     private String image;
     @ManyToOne
-    @JoinColumn(name = "spk")
+    @JoinColumn
     private StoreEntity store;
 }
