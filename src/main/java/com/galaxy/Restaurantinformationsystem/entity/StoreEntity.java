@@ -4,6 +4,8 @@ import com.galaxy.Restaurantinformationsystem.common.FoodType;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.sql.Timestamp;
+
 @Entity
 @Getter
 @Setter
@@ -25,6 +27,11 @@ public class StoreEntity {
     private FoodType category;
 
     private String businessHour;
+
+    @Column(columnDefinition = "LONGTEXT")
+    private String description;
+
+    private Timestamp createdAt;
 
     private Double latitude;
     private Double longitude;

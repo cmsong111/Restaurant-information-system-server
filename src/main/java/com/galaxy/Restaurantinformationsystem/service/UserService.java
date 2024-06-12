@@ -13,7 +13,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 
 @Service
@@ -33,7 +35,9 @@ public class UserService {
         }
         userRegisterFormDto.setPassword(passwordEncoder.encode(userRegisterFormDto.getPassword()));
         UserEntity userEntity = modelMapper.map(userRegisterFormDto, UserEntity.class);
-        userEntity.setRole(UserRole.USER);
+        Set<UserRole> roles = new HashSet<>();
+        roles.add(UserRole.USER);
+        userEntity.setRole(roles);
 
         return modelMapper.map(userRepository.save(userEntity), UserInfoDto.class);
     }
@@ -77,6 +81,10 @@ public class UserService {
 
     public Optional<UserInfoDto> searchById(Long id) {
         return userRepository.findById(id).map(userEntity -> modelMapper.map(userEntity, UserInfoDto.class));
+    }
+
+    public Optional<UserInfoDto> searchByEmail(String email) {
+        return Optional.ofNullable(modelMapper.map(userRepository.findByEmail(email), UserInfoDto.class));
     }
 
 }

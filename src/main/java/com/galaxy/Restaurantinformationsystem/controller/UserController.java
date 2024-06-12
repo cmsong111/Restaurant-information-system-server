@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.Optional;
 
 @RestController
@@ -38,7 +39,7 @@ public class UserController {
     }
 
 
-    @PostMapping("/update")
+    @PatchMapping
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "회원 정보 수정", description = "회원 정보 수정")
     public UserInfoDto userUpdate(@RequestBody UserInfoDto userDTO, HttpServletRequest req) {
@@ -48,7 +49,7 @@ public class UserController {
     }
 
 
-    @PostMapping("/delete")
+    @DeleteMapping("/delete")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "회원 탈퇴", description = "회원 탈퇴")
     public String userDelete(HttpServletRequest req) {
@@ -56,11 +57,11 @@ public class UserController {
         return "Delete Done";
     }
 
-    @GetMapping("/whoami")
+    @GetMapping
     @Operation(summary = "회원 정보 읽기", description = "회원 정보 읽기")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<UserInfoDto> whoami(HttpServletRequest req) {
-        Optional<UserInfoDto> userDTO = userService.searchById(jwtTokenProvider.getUid(req));
+    public ResponseEntity<UserInfoDto> whoami(Principal principal) {
+        Optional<UserInfoDto> userDTO = userService.searchByEmail(principal.getName());
         return userDTO.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

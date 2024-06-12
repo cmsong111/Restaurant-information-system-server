@@ -20,6 +20,7 @@ import org.springframework.stereotype.Component;
 import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
+import java.util.Set;
 
 @Component
 public class JwtTokenProvider {
@@ -42,21 +43,15 @@ public class JwtTokenProvider {
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public String createToken(UserEntity userEntity, UserRole userRoles) {
+    public String createToken(UserEntity userEntity, Set<UserRole> userRoles) {
         Date now = new Date();
         Date validity = new Date(now.getTime() + validityInMilliseconds);
-        // 쿠키 이름
-        Claims claims = Jwts.claims().setSubject("내가 만든 쿠키~ 너를 위해 구웠지");
 
-        // Spring Security HasRole 부분을 위한 부분
-        claims.put("auth", userRoles.getAuthority());
-        // 사용자 Id
-        claims.put("uid", userEntity.getId());
-        // 사용자 이메일
-        claims.put("email", userEntity.getEmail());
 
         return Jwts.builder()
-                .setClaims(claims)
+                .setSubject("Authentication Token")
+                .setIssuer("Restaurant-information-system")
+                .setAudience(userEntity.getEmail())
                 .setIssuedAt(now)
                 .setExpiration(validity)
                 .signWith(key, SignatureAlgorithm.HS256)
@@ -72,9 +67,6 @@ public class JwtTokenProvider {
         String bearerToken = req.getHeader("Authorization");
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
-        }
-        if (bearerToken == null) {
-            throw new RuntimeException("토큰이 없습니다.");
         }
         return null;
     }
@@ -104,7 +96,7 @@ public class JwtTokenProvider {
                 .build()
                 .parseClaimsJws(token)
                 .getBody()
-                .get("email", String.class);
+                .getAudience();
     }
 
 }

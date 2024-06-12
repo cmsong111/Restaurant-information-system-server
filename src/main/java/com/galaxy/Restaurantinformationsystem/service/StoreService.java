@@ -21,11 +21,11 @@ import java.util.Optional;
 @Slf4j
 @RequiredArgsConstructor
 public class StoreService {
-    StoreRepository storeRepository;
-    UserRepository userRepository;
-    MenuRepository menuRepository;
-    ReviewRepository reviewRepository;
-    ModelMapper modelMapper;
+    private final StoreRepository storeRepository;
+    private final UserRepository userRepository;
+    private final MenuRepository menuRepository;
+    private final ReviewRepository reviewRepository;
+    private final ModelMapper modelMapper;
 
     public StoreDTO createStoreDTO(StoreDTO storeDTO) {
         StoreEntity storeEntity = modelMapper.map(storeDTO, StoreEntity.class);
