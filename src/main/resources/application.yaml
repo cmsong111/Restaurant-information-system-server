@@ -5,7 +5,7 @@ spring:
       path: /h2-console
 
   datasource:
-    url: jdbc:h2:mem:test;MODE=MYSQL
+    url: jdbc:h2:mem:test
     username: sa
     password:
     driver-class-name: org.h2.Driver
@@ -22,20 +22,6 @@ spring:
   sql:
     init:
       mode: always
-
-
-logging:
-  level:
-    org:
-      hibernate:
-        SQL: debug
-        type: trace
-        descriptor.sql: DEBUG
-
-springdoc:
-  swagger-ui:
-    path: /swagger-ui.html
-
 
 security:
   jwt:
