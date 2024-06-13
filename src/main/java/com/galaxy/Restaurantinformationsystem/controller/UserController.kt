@@ -5,6 +5,7 @@ import com.galaxy.Restaurantinformationsystem.dto.UserRegisterFormDto
 import com.galaxy.Restaurantinformationsystem.service.UserService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
@@ -12,6 +13,7 @@ import java.security.Principal
 
 @RestController
 @RequestMapping("/user")
+@Tag(name = "유저 API", description = "유저 정보를 조회하는 API")
 class UserController(
     val userService: UserService
 ) {

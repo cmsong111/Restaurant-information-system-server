@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
@@ -18,11 +19,13 @@ import java.security.Principal
 /**
  * 리뷰 Controller 클래스
  */
+@Tag(name = "리뷰 API", description = "리뷰 API를 관리하는 Controller")
 @RestController
+@RequestMapping("/review")
 class ReviewController(
     val reviewService: ReviewService
 ) {
-    @PostMapping("/{store_id}/review")
+    @PostMapping("/{store_id}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "리뷰 생성 API", description = "리뷰를 생성하는 API")
     @ApiResponses(
@@ -52,7 +55,7 @@ class ReviewController(
         return ResponseEntity.created(URI.create("/review/${reviewResponseDto.id}")).body(reviewResponseDto)
     }
 
-    @PatchMapping("/review/{review_id}")
+    @PatchMapping("/{review_id}")
     @PreAuthorize("@checker.isReviewAuthor(#review_id)")
     @Operation(summary = "리뷰 수정 API", description = "리뷰를 수정하는 API")
     @ApiResponses(
@@ -81,14 +84,14 @@ class ReviewController(
         return ResponseEntity.ok(reviewService.updateReview(reviewId, reviewFormDTO, principal.name))
     }
 
-    @DeleteMapping("/review/{review_id}")
+    @DeleteMapping("/{review_id}")
     @PreAuthorize("@checker.isReviewAuthor(#review_id)")
     @Operation(summary = "리뷰 삭제 API", description = "리뷰를 삭제하는 API")
     @ApiResponses(
         value = [
-            ApiResponse(responseCode = "204", description = "리뷰 삭제 성공"),
-            ApiResponse(responseCode = "403", description = "권한 없음"),
-            ApiResponse(responseCode = "404", description = "리뷰를 찾을 수 없음")
+            ApiResponse(responseCode = "204", description = "리뷰 삭제 성공", content = [Content(schema = Schema(hidden = true))]),
+            ApiResponse(responseCode = "403", description = "권한 없음", content = [Content(schema = Schema(hidden = true))]),
+            ApiResponse(responseCode = "404", description = "리뷰를 찾을 수 없음", content = [Content(schema = Schema(hidden = true))])
         ]
     )
     fun deleteReview(
@@ -98,7 +101,7 @@ class ReviewController(
         return ResponseEntity.noContent().build()
     }
 
-    @GetMapping("/review/my")
+    @GetMapping
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "내 리뷰 조회 API", description = "내가 작성한 리뷰를 조회하는 API")
     @ApiResponses(
