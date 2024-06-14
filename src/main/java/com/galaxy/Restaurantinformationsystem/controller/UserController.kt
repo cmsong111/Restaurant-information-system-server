@@ -1,5 +1,6 @@
 package com.galaxy.Restaurantinformationsystem.controller
 
+import com.galaxy.Restaurantinformationsystem.dto.TokenDto
 import com.galaxy.Restaurantinformationsystem.dto.UserInfoDto
 import com.galaxy.Restaurantinformationsystem.dto.UserRegisterFormDto
 import com.galaxy.Restaurantinformationsystem.service.UserService
@@ -29,9 +30,9 @@ class UserController(
     fun userLogin(
         @Parameter(description = "이메일") @RequestParam(value = "email", required = true) email: String,
         @Parameter(description = "비밀번호") @RequestParam(value = "password", required = true) password: String
-    ): ResponseEntity<String> {
+    ): ResponseEntity<TokenDto> {
         val token = userService.login(email, password)
-        return ResponseEntity.ok(token)
+        return ResponseEntity.ok(TokenDto(token))
     }
 
 

@@ -3,6 +3,7 @@ package com.galaxy.Restaurantinformationsystem.service
 import com.galaxy.Restaurantinformationsystem.config.JwtTokenProvider
 import com.galaxy.Restaurantinformationsystem.dto.UserInfoDto
 import com.galaxy.Restaurantinformationsystem.dto.UserRegisterFormDto
+import com.galaxy.Restaurantinformationsystem.entity.UserEntity
 import com.galaxy.Restaurantinformationsystem.mapper.UserMapper
 import com.galaxy.Restaurantinformationsystem.repository.ReviewRepository
 import com.galaxy.Restaurantinformationsystem.repository.StoreRepository
@@ -24,8 +25,12 @@ class UserService(
         if (userRepository.existsByEmail(userRegisterFormDto.email)) {
             throw RuntimeException("이미 가입되어 있는 유저입니다.")
         }
-        userRegisterFormDto.password = passwordEncoder.encode(userRegisterFormDto.password)
-        val userEntity = userMapper.toUserEntity(userRegisterFormDto)
+
+        val userEntity = UserEntity(
+            email = userRegisterFormDto.email,
+            name = userRegisterFormDto.name,
+            password = passwordEncoder.encode(userRegisterFormDto.password)
+        )
 
         return userMapper.toUserInfoDto(userRepository.save(userEntity))
     }

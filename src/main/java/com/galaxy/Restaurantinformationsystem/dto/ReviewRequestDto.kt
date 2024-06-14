@@ -10,7 +10,7 @@ import io.swagger.v3.oas.annotations.media.Schema
  * @property image 이미지
  * @property score 평점
  */
-@Schema(name = "리뷰 요청 정보", description = "리뷰 요청 정보")
+@Schema(description = "리뷰 요청 정보")
 data class ReviewRequestDto(
     @field:Schema(description = "제목", example = "맛있어요", required = true)
     val title: String,

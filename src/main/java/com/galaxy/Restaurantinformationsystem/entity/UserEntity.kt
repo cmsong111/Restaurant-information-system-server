@@ -35,10 +35,10 @@ class UserEntity(
     val role: MutableList<UserRole> = mutableListOf(UserRole.USER),
 
     @OneToMany(cascade = [CascadeType.ALL])
-    val stores: MutableList<StoreEntity>,
+    val stores: MutableList<StoreEntity> = mutableListOf(),
 
     @OneToMany(cascade = [CascadeType.ALL])
-    val review: MutableList<ReviewEntity>,
+    val review: MutableList<ReviewEntity> = mutableListOf(),
 
     @CreatedDate
     val createdAt: Timestamp = Timestamp(System.currentTimeMillis()),
