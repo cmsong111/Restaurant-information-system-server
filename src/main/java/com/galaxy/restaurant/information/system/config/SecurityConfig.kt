@@ -1,5 +1,7 @@
 package com.galaxy.restaurant.information.system.config
 
+import com.galaxy.restaurant.information.system.auth.JwtTokenProvider
+import com.galaxy.restaurant.information.system.auth.filter.JwtTokenFilter
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
